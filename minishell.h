@@ -16,3 +16,14 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include "./libft/libft.h"
+
+typedef	struct s_all
+{
+	char	**env_vars;
+	int		env_amount;
+}				t_all;
+
+
+
+#endif

@@ -12,12 +12,3 @@
 
 #include "minishell.h"
 
-int		ft_echo(char *str, int flag)
-{
-
-}
-
-int		ft_pwd(void)
-{
-	
-}

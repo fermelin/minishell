@@ -19,18 +19,18 @@ OBJ = $(SRC:.c=.o)
 
 LIBFTDIR = ./libft/
 
-LIBFT = libft.a
+LIBFT = $(LIBFTDIR)libft.a
 
 CC = gcc
 
-CFLAGS = -Wall -Werror -Wextra 
+CFLAGS = -g #-Wall -Werror -Wextra -Ilibft
 all:	$(NAME)
 
-%.o: %.c $(NAME) $(LIBFT)
-		$(CC) $(CFLAGS) $< -o $@
+%.o: %.c
+		$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(LIBFT) $(OBJ)
-		$(CC) $(CFLAGS) -L$(LIBFTDIR) -lft $^ -o $(NAME)
+		$(CC) $(CFLAGS) -Llibft -lft $^ -o $(NAME)
 
 $(LIBFT):
 		make bonus -C $(LIBFTDIR)
