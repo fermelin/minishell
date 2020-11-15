@@ -6,7 +6,7 @@
 #    By: fermelin <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/13 17:59:32 by fermelin          #+#    #+#              #
-#    Updated: 2020/11/13 17:59:35 by fermelin         ###   ########.fr        #
+#    Updated: 2020/11/15 18:19:36 by fermelin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ $(LIBFT):
 clean:
 		make clean -C $(LIBFTDIR)
 		rm -f $(OBJ)
+		rm -rf *.dSYM
 
 fclean: clean
 		make fclean -C $(LIBFTDIR)
