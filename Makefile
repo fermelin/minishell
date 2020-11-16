@@ -13,7 +13,9 @@
 
 NAME = minishell
 
-SRC = main.c 
+SRC =	main.c \
+		builtins_cd_export.c \
+		builtins_unset_env_pwd.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -23,7 +25,7 @@ LIBFT = $(LIBFTDIR)libft.a
 
 CC = gcc
 
-CFLAGS = -g #-Wall -Werror -Wextra -Ilibft
+CFLAGS = -g -Wall -Werror -Wextra -Ilibft
 all:	$(NAME)
 
 %.o: %.c

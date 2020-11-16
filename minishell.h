@@ -23,9 +23,15 @@
 typedef	struct s_all
 {
 	char	**env_vars;
-	int		env_amount;
+	size_t	env_amount;
 }				t_all;
 
+int		ft_cd(char *path, t_all *all);
+int		ft_pwd(void);
+void	ft_env(t_all *all);
+void	ft_unset(t_all *all, char **args);
+void	ft_export(t_all *all, char **args);
 
+void	free_ptrs_array(char **ptr_array);
 
 #endif
