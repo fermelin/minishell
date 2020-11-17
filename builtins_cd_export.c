@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static	int		get_env_line(char *to_find, t_all *all)
+int		get_env_line(char *to_find, t_all *all)
 {
 	size_t i;
 	size_t len;

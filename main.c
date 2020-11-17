@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fermelin <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:26:13 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/13 19:26:16 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/17 17:42:50 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	parser(t_all *all)
 {
 	char *line;
 	char **splited;
+	
 	while (get_next_line(0, &line) > 0)
 	{
 		if ((splited = ft_split(line, ' ')))
@@ -75,8 +76,12 @@ void	parser(t_all *all)
 				ft_unset(all, &(splited[1]));
 			else if (ft_strncmp("export", splited[0], 7) == 0)
 				ft_export(all, &(splited[1]));
-			else
+			else if (ft_strncmp("stat", splited[0], 5) == 0)
+				stat_test(&(splited[1]));
+			else if (ft_strncmp("q", splited[0], 2) == 0)
 				break;
+			else
+				exec_cmds(all, splited);
 		}
 		free(line);
 		line = NULL;

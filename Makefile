@@ -15,7 +15,8 @@ NAME = minishell
 
 SRC =	main.c \
 		builtins_cd_export.c \
-		builtins_unset_env_pwd.c
+		builtins_unset_env_pwd.c \
+		execve_test.c
 
 OBJ = $(SRC:.c=.o)
 
