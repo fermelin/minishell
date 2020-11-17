@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fermelin <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/13 17:59:32 by fermelin          #+#    #+#              #
-#    Updated: 2020/11/15 18:19:36 by fermelin         ###   ########.fr        #
+#    Updated: 2020/11/17 22:30:37 by fermelin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,14 +26,14 @@ LIBFT = $(LIBFTDIR)libft.a
 
 CC = gcc
 
-CFLAGS = -g -Wall -Werror -Wextra -Ilibft
+CFLAGS = -g -Wall -Werror -Wextra -I./libft
 all:	$(NAME)
 
 %.o: %.c
 		$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(LIBFT) $(OBJ)
-		$(CC) $(CFLAGS) -Llibft -lft $^ -o $(NAME)
+		$(CC) $(CFLAGS)  $^ -o $(NAME) -Llibft -lft
 
 $(LIBFT):
 		make bonus -C $(LIBFTDIR)

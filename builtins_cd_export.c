@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_cd_export.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fermelin <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 15:09:13 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/16 15:09:16 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/17 21:58:17 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static	void	add_empty_line_to_env(t_all *all)
 
 static	int		edit_or_add_env_line(char *key, char *value, t_all *all)
 {
-	size_t	line_nbr;
+	int	line_nbr;
 
 	// if (!ft_strchr(key, '='))
 	// 	return (0);			//to do nothing
@@ -97,12 +97,10 @@ void		ft_export(t_all *all, char **args)	//to handle bad symbols
 
 int			ft_cd(char *path, t_all *all)
 {
-	size_t	i;
 	int		line_nbr;
 	char	*cwd;
 	char	*oldpwd;
 
-	i = 0;
 	if ((!path || !(*path)) && (line_nbr = get_env_line("HOME=", all)) != -1)
 		path = all->env_vars[line_nbr] + 5;
 	if (path && chdir(path) == -1)

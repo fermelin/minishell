@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execve_test.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fermelin <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/17 11:21:38 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/17 22:00:09 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <sys/types.h>
-#include <sys/stat.h>
 
 void	exec_cmds(t_all *all, char **argv)
 {
