@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:26:13 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/17 17:42:50 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/19 20:24:13 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 
 // int		ft_echo(char *str, t_all *all)
 // {
-// 	ft_putstr_fd(1, )
+// 	if (!flag_n)
+// 		ft_putendl_fd(str, 1);
+// 	else
+// 		ft_putstr_fd(str, 1);
 // }
 
 void	free_ptrs_array(char **ptr_array)
@@ -57,11 +60,29 @@ void	envp_saving(char **envp, t_all *all)
 	all->env_vars[i] = NULL;
 }
 
+void	ctrl_c_handler(int signum)
+{
+	signum = 0;
+	// printf("ctrl + d pressed, sig num is %d\n", signum);
+	// int fd;
+	// int save;
+
+	// save = dup(0);
+	// close(0);
+
+	
+	ft_putstr_fd("\n> \033[1;35m$\033[0m ", 1);
+	// dup2(save, 0);
+	// close(save);
+	// exit(0);
+}
+
 void	parser(t_all *all)
 {
 	char *line;
 	char **splited;
 	
+	signal(SIGINT, ctrl_c_handler);
 	while (get_next_line(0, &line) > 0)
 	{
 		if ((splited = ft_split(line, ' ')))
@@ -86,8 +107,11 @@ void	parser(t_all *all)
 		free(line);
 		line = NULL;
 		free_ptrs_array(splited);
-		ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
+		if (all->child_killed != 1)
+			ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
+		all->child_killed = 0;
 	}
+	ft_putendl_fd("exit", 1);
 }
 
 int		main(int argc, char **argv, char **envp)
@@ -99,6 +123,12 @@ int		main(int argc, char **argv, char **envp)
 		ft_putendl_fd("No parameters needed", 2);
 		return (-1);
 	}
+	
+	// signal(SIGINT, ctrl_c_handler);
+	// signal(SIGINT, SIG_IGN);
+	// signal(SIGQUIT, ctrl_d_handler);
+	// signal(SIGINT, ctrl_d_handler);
+
 	envp_saving(envp, &all);
 	ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
 	parser(&all);

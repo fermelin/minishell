@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/17 22:00:00 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/19 20:23:18 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,15 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <signal.h>
 #include "./libft/libft.h"
+
 
 typedef	struct s_all
 {
 	char	**env_vars;
 	size_t	env_amount;
+	int		child_killed;
 }				t_all;
 
 /*
@@ -44,5 +47,6 @@ void	exec_cmds(t_all *all, char **argv);
 void	stat_test(char **file_names);
 int		get_env_line(char *to_find, t_all *all);
 char	*find_file_in_path(char	*file_name, t_all *all);
+void	ctrl_c_handler(int signum);
 
 #endif
