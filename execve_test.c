@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/19 20:24:16 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/20 16:08:17 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,37 +23,43 @@
 // 	exit(0);
 // }
 
+int		child_process(t_all *all, char **argv)
+{
+	char	*path;
+	int		execve_ret;
+
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	execve_ret = 0;
+	if ((ft_strncmp("./", argv[0], 2)) == 0 ||
+		(ft_strncmp("../", argv[0], 3)) == 0 || (ft_strncmp("/", argv[0], 1)) == 0)
+		execve_ret = execve(argv[0], argv, all->env_vars);
+	else if ((path = find_file_in_path(argv[0], all)))
+	{
+		execve_ret = execve(path, argv, all->env_vars);
+		free(path);
+	}
+	else
+	{
+		ft_putstr_fd("msh: command not found: ", 2);
+		ft_putendl_fd(argv[0], 2);
+	}
+	if (execve_ret == -1)
+		perror(argv[0]);
+	exit(execve_ret);
+}
+
 void	exec_cmds(t_all *all, char **argv)
 {
 	int		status;
-	int		execve_ret;
-	char	*path;
 	int		pid;
+
 	// void	*sig_ret;
 	// signal(SIGINT, )
 	pid = fork();
 	if (pid == 0)
 	{
-		// signal(SIGINT, ctrl_c_handler_child);
-		signal(SIGINT, SIG_DFL);
-		// printf("sig_ret is %s\n", sig_ret);
-		execve_ret = 0;
-		if ((ft_strncmp("./", argv[0], 2)) == 0 ||
-			(ft_strncmp("../", argv[0], 3)) == 0 || (ft_strncmp("/", argv[0], 1)) == 0)
-			execve_ret = execve(argv[0], argv, all->env_vars);
-		else if ((path = find_file_in_path(argv[0], all)))
-		{
-			execve_ret = execve(path, argv, all->env_vars);
-			free(path);
-		}
-		else
-		{
-			ft_putstr_fd("msh: command not found: ", 2);
-			ft_putendl_fd(argv[0], 2);
-		}
-		if (execve_ret == -1)
-			perror(argv[0]);
-		exit(execve_ret);
+		child_process(all, argv);
 	}
 	else
 	{
@@ -94,7 +100,7 @@ char	*find_file_in_path(char	*file_name, t_all *all)
 	int		stat_ret;
 
 	i = 0;
-	if ((env_line = get_env_line("PATH=", all)) == -1)
+	if ((env_line = get_env_line_nbr("PATH=", all)) == -1)
 		return (NULL);
 	splited_path = ft_split(all->env_vars[env_line] + 5, ':');
 	while (splited_path[i])

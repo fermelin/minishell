@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:26:13 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/19 20:24:13 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/20 18:33:26 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,19 @@ void	free_ptrs_array(char **ptr_array)
 		free(ptr_array);
 	}
 }
+
+// char	*get_env_str(char *key, t_all *all)	//for $<env_var>
+// {
+// 	int	nbr;
+// 	int	key_len;
+
+// 	if (!key || !(*key) || (nbr = get_env_line_nbr(key, all)) == -1)
+// 		return (NULL);
+// 	key_len = ft_strlen(key);
+// 	if (all->env_vars[nbr][key_len] != '=')
+// 		return (NULL);
+// 	return (&(all->env_vars[nbr][key_len + 1]));
+// }
 
 void	envp_saving(char **envp, t_all *all)
 {
@@ -70,7 +83,6 @@ void	ctrl_c_handler(int signum)
 	// save = dup(0);
 	// close(0);
 
-	
 	ft_putstr_fd("\n> \033[1;35m$\033[0m ", 1);
 	// dup2(save, 0);
 	// close(save);
@@ -82,7 +94,7 @@ void	parser(t_all *all)
 	char *line;
 	char **splited;
 	
-	signal(SIGINT, ctrl_c_handler);
+
 	while (get_next_line(0, &line) > 0)
 	{
 		if ((splited = ft_split(line, ' ')))
@@ -96,7 +108,7 @@ void	parser(t_all *all)
 			else if (ft_strncmp("unset", splited[0], 6) == 0)
 				ft_unset(all, &(splited[1]));
 			else if (ft_strncmp("export", splited[0], 7) == 0)
-				ft_export(all, &(splited[1]));
+				ft_export(all, splited + 1);
 			else if (ft_strncmp("stat", splited[0], 5) == 0)
 				stat_test(&(splited[1]));
 			else if (ft_strncmp("q", splited[0], 2) == 0)
@@ -118,6 +130,8 @@ int		main(int argc, char **argv, char **envp)
 {
 	t_all all;
 
+	signal(SIGINT, ctrl_c_handler);
+	signal(SIGQUIT, ctrl_c_handler);
 	if (argc != 1 || !argv)
 	{
 		ft_putendl_fd("No parameters needed", 2);
