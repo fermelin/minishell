@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/20 16:08:17 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/24 15:33:00 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,11 @@ int		child_process(t_all *all, char **argv)
 		ft_putendl_fd(argv[0], 2);
 	}
 	if (execve_ret == -1)
+	{
 		perror(argv[0]);
+		// printf("MY:\n");
+		// error_exit("execve");
+	}
 	exit(execve_ret);
 }
 
@@ -54,8 +58,6 @@ void	exec_cmds(t_all *all, char **argv)
 	int		status;
 	int		pid;
 
-	// void	*sig_ret;
-	// signal(SIGINT, )
 	pid = fork();
 	if (pid == 0)
 	{
@@ -63,7 +65,6 @@ void	exec_cmds(t_all *all, char **argv)
 	}
 	else
 	{
-		// signal(SIGINT, SIG_IGN);
 		wait(&status);
 		if (WIFSIGNALED(status))
 			all->child_killed = 1;
@@ -87,7 +88,6 @@ void	stat_test(char **file_names)
 		i++;
 	}
 }
-// void (*signal(int sig, void (*func)(int)))(int)
 
 char	*find_file_in_path(char	*file_name, t_all *all)
 {

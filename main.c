@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:26:13 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/20 18:33:26 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/24 18:43:52 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,41 +83,70 @@ void	ctrl_c_handler(int signum)
 	// save = dup(0);
 	// close(0);
 
-	ft_putstr_fd("\n> \033[1;35m$\033[0m ", 1);
+	ft_putstr_fd("\b\b  \n> \033[1;35m$\033[0m ", 1);
 	// dup2(save, 0);
 	// close(save);
 	// exit(0);
 }
 
+// void	ctrl_backslash_handler(int signum)
+// {
+// 	signum = 0;
+
+// 	ft_putstr_fd("\b\b  \b\b", 1);
+// }
+int		execution(t_all *all)
+{
+	t_data	*tmp;
+	// int		fildes[2];
+
+	tmp = all->data;
+	while (tmp)
+	{
+		if (tmp->pipe == 1)
+		{
+			exec_cmds_pipe(all);
+		}
+		if (ft_strncmp("cd", tmp->args[0], 3) == 0)
+			ft_cd(tmp->args[1], all);
+		else if (ft_strncmp("pwd", tmp->args[0], 4) == 0)
+			ft_pwd();
+		else if (ft_strncmp("env", tmp->args[0], 4) == 0)
+			ft_env(all);
+		else if (ft_strncmp("unset", tmp->args[0], 6) == 0)
+			ft_unset(all, &(tmp->args[1]));
+		else if (ft_strncmp("export", tmp->args[0], 7) == 0)
+			ft_export(all, tmp->args + 1);
+		else if (ft_strncmp("stat", tmp->args[0], 5) == 0)
+			stat_test(&(tmp->args[1]));
+		// else if (is_pipe(tmp->args))
+		// 	pipe_handler(all, tmp->args);
+		else if (ft_strncmp("q", tmp->args[0], 2) == 0)
+			return (0);
+		else
+			exec_cmds(all, tmp->args);
+		tmp = tmp->next;
+	}
+	return (1);
+}
+
 void	parser(t_all *all)
 {
-	char *line;
-	char **splited;
-	
+	char	*line;
+	char	**splited;
 
 	while (get_next_line(0, &line) > 0)
 	{
 		if ((splited = ft_split(line, ' ')))
 		{
-			if (ft_strncmp("cd", splited[0], 3) == 0)
-				ft_cd(splited[1], all);
-			else if (ft_strncmp("pwd", splited[0], 4) == 0)
-				ft_pwd();
-			else if (ft_strncmp("env", splited[0], 4) == 0)
-				ft_env(all);
-			else if (ft_strncmp("unset", splited[0], 6) == 0)
-				ft_unset(all, &(splited[1]));
-			else if (ft_strncmp("export", splited[0], 7) == 0)
-				ft_export(all, splited + 1);
-			else if (ft_strncmp("stat", splited[0], 5) == 0)
-				stat_test(&(splited[1]));
-			else if (ft_strncmp("q", splited[0], 2) == 0)
-				break;
-			else
-				exec_cmds(all, splited);
+			all->data = p_lstnew();
+			parser_to_list(all, splited);
+			if (execution(all) == 0)
+				break ;
 		}
 		free(line);
 		line = NULL;
+		p_lstclear(&(all->data));
 		free_ptrs_array(splited);
 		if (all->child_killed != 1)
 			ft_putstr_fd("> \033[1;35m$\033[0m ", 1);

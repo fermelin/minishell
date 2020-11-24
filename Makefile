@@ -6,7 +6,7 @@
 #    By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/13 17:59:32 by fermelin          #+#    #+#              #
-#    Updated: 2020/11/17 22:30:37 by fermelin         ###   ########.fr        #
+#    Updated: 2020/11/24 13:31:15 by fermelin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,10 @@ NAME = minishell
 SRC =	main.c \
 		builtins_cd_export.c \
 		builtins_unset_env_pwd.c \
-		execve_test.c
+		execve_test.c \
+		error_handling.c \
+		pipes.c \
+		p_lists.c
 
 OBJ = $(SRC:.c=.o)
 
