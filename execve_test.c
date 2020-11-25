@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/25 17:36:44 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/25 19:34:14 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,6 @@
 // void	ctrl_backslash_handler(int signum)
 // {
 
-// }
-
-// static void	ctrl_c_handler_child(int signum)
-// {
-// 	printf("CHILD receives signal %d\n", signum);
-// 	exit(0);
 // }
 
 int		child_process(t_all *all, char **argv)

@@ -6,11 +6,34 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 15:29:03 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/25 15:53:28 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/25 18:50:07 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ctrl_c_handler(int signum)
+{
+	signum = 0;
+	ft_putstr_fd("\b\b  \n> \033[1;35m$\033[0m ", 1);
+}
+
+void	free_ptrs_array(char **ptr_array)
+{
+	size_t i;
+
+	i = 0;
+	if (ptr_array)
+	{
+		while (ptr_array[i])
+		{
+			free(ptr_array[i]);
+			ptr_array[i] = NULL;
+			i++;
+		}
+		free(ptr_array);
+	}
+}
 
 int		get_env_line_nbr(char *to_find, t_all *all)
 {

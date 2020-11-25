@@ -6,23 +6,30 @@
 #    By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/13 17:59:32 by fermelin          #+#    #+#              #
-#    Updated: 2020/11/25 15:55:01 by fermelin         ###   ########.fr        #
+#    Updated: 2020/11/25 18:52:38 by fermelin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME = minishell
 
-SRC =	main.c \
-		builtins_cd_export.c \
+SRC =	builtins_cd_export.c \
 		builtins_unset_env_pwd.c \
 		execve_test.c \
 		error_handling.c \
 		pipes.c \
-		p_lists.c \
 		redirections.c \
-		parser.c \
-		env_vars_utils.c
+		env_vars_utils.c \
+		execution.c \
+		parser/argv_parser.c \
+		parser/command.c \
+		parser/main.c \
+		parser/utils_parser.c \
+		struct_parser/p_lstall.c \
+		struct_parser/p_lstnew.c
+# 		parser.c \
+# 		main.c \
+# 		p_lists.c \
 
 OBJ = $(SRC:.c=.o)
 

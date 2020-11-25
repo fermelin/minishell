@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/25 17:37:13 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/25 19:02:43 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,23 +73,24 @@ char	*find_file_in_path(char	*file_name, t_all *all);
 void	ctrl_c_handler(int signum);
 void	error_message(char *text_error);
 void	envp_saving(char **envp, t_all *all);
-/*
-**		to delete to delete to delete to delete 
-*/
-t_data	*p_lstnew(void);
-void	p_lstadd_back(t_data **lst, t_data *new);
-void	p_lstadd_front(t_data **lst, t_data *new);
-void	p_lstclear(t_data **lst);
-void	p_lstdelone(t_data *lst);
-t_data	*p_lstlast(t_data *lst);
-int		p_lstsize(t_data *lst);
+// /*
+// **		to delete to delete to delete to delete 
+// */
+// t_data	*p_lstnew(void);
+// void	p_lstadd_back(t_data **lst, t_data *new);
+// void	p_lstadd_front(t_data **lst, t_data *new);
+// void	p_lstclear(t_data **lst);
+// void	p_lstdelone(t_data *lst);
+// t_data	*p_lstlast(t_data *lst);
+// int		p_lstsize(t_data *lst);
 
 /*
 **		to delete to delete to delete to delete 
 */
 void	parser_to_list(t_all *all, char **splited);
-void	parser(t_all *all);
+// void	parser(t_all *all);
 int		execution(t_all *all);
+int		choose_command(t_all *all);
 /*
 **		redirections & pipes
 */
@@ -97,5 +98,17 @@ void	output_to_file(t_all *all);
 void	input_from_file(t_all *all);
 void	open_pipe_write_and_close_read(t_all *all);
 void	close_file_or_pipe_read(t_all *all);
+/*
+**		parser
+*/
+void 	filling_struct(t_data **elem, t_list *new, int len);
+void	line_search(char *line, t_data **elem, int start, int end);
+t_data	*p_lstnew(void);
+void	p_lstadd_back(t_data **lst, t_data *new);
+void	p_lstclear(t_data **lst);
+t_data	*p_lstlast(t_data *lst);
+int		p_lstsize(t_data *lst);
+void	p_lstdelone(t_data *lst, void (*del)(void*));
+void	error_malloc();
 
 #endif
