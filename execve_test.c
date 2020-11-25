@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/24 15:33:00 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/25 17:36:44 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,11 @@ int		child_process(t_all *all, char **argv)
 		ft_putendl_fd(argv[0], 2);
 	}
 	if (execve_ret == -1)
-	{
-		perror(argv[0]);
-		// printf("MY:\n");
-		// error_exit("execve");
-	}
+		error_message("execve");
 	exit(execve_ret);
 }
 
-void	exec_cmds(t_all *all, char **argv)
+int		exec_cmds(t_all *all, char **argv)
 {
 	int		status;
 	int		pid;
@@ -66,12 +62,13 @@ void	exec_cmds(t_all *all, char **argv)
 	else
 	{
 		wait(&status);
-		if (WIFSIGNALED(status))
+		if (WIFSIGNALED(status))	// change it to SIGCHLD
 			all->child_killed = 1;
 	}
+	return (0);
 }
 
-void	stat_test(char **file_names)
+int		stat_test(char **file_names)		//to delete to delete to delete to delete to delete to delete to delete to delete 
 {
 	struct stat buf;
 	int		stat_ret;
@@ -87,6 +84,7 @@ void	stat_test(char **file_names)
 			printf("file %d exists!!!\n", i);
 		i++;
 	}
+	return (0);
 }
 
 char	*find_file_in_path(char	*file_name, t_all *all)
@@ -117,31 +115,3 @@ char	*find_file_in_path(char	*file_name, t_all *all)
 	free_ptrs_array(splited_path);
 	return (NULL);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

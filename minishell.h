@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/24 17:56:54 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/25 17:37:13 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <fcntl.h>
 #include "./libft/libft.h"
 
 typedef struct		s_data
@@ -29,6 +30,7 @@ typedef struct		s_data
 	char			**args;
 	char			*file_name;
 	int				pipe;
+	int				pipe_behind;
 	int				red_to;
 	int				doub_red_to;
 	int				red_from;
@@ -40,8 +42,14 @@ typedef	struct		s_all
 	char			**env_vars;
 	size_t			env_amount;
 	int				child_killed;
-	// int				exit_status;
+	int				exit_status;
+	int				fildes1[2];
+	int				fildes2[2];
+	int				save0;
+	int				save1;	//pipes and redirections may conflict about it
+
 	t_data			*data;
+	t_data			*head;
 }					t_all;
 
 
@@ -51,19 +59,20 @@ typedef	struct		s_all
 */
 int		ft_cd(char *path, t_all *all);
 int		ft_pwd(void);
-void	ft_env(t_all *all);
-void	ft_unset(t_all *all, char **args);
-void	ft_export(t_all *all, char **args);
+int		ft_env(t_all *all);
+int		ft_unset(t_all *all, char **args);
+int		ft_export(t_all *all, char **args);
 /*
 **		utils
 */
 void	free_ptrs_array(char **ptr_array);
-void	exec_cmds(t_all *all, char **argv);
-void	stat_test(char **file_names);
+int		exec_cmds(t_all *all, char **argv);
+int		stat_test(char **file_names);
 int		get_env_line_nbr(char *to_find, t_all *all);
 char	*find_file_in_path(char	*file_name, t_all *all);
 void	ctrl_c_handler(int signum);
-void	error_exit(char *text_error);
+void	error_message(char *text_error);
+void	envp_saving(char **envp, t_all *all);
 /*
 **		to delete to delete to delete to delete 
 */
@@ -78,9 +87,15 @@ int		p_lstsize(t_data *lst);
 /*
 **		to delete to delete to delete to delete 
 */
-int		child_process_pipe(t_all *all, int fildes, int thread);
 void	parser_to_list(t_all *all, char **splited);
-int		is_pipe(char **splited);
-void	exec_cmds_pipe(t_all *all);
+void	parser(t_all *all);
+int		execution(t_all *all);
+/*
+**		redirections & pipes
+*/
+void	output_to_file(t_all *all);
+void	input_from_file(t_all *all);
+void	open_pipe_write_and_close_read(t_all *all);
+void	close_file_or_pipe_read(t_all *all);
 
 #endif

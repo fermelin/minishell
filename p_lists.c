@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/24 06:53:17 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/24 13:35:44 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/25 11:11:47 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_data	*p_lstnew(void)
 	newelem->args = NULL;
 	newelem->file_name = NULL;
 	newelem->pipe = 0;
+	newelem->pipe_behind = 0;
 	newelem->red_to = 0;
 	newelem->doub_red_to = 0;
 	newelem->red_from = 0;
@@ -72,8 +73,8 @@ void	p_lstclear(t_data **lst)
 		tmp = (*lst)->next;
 		free_ptrs_array((*lst)->args);
 		free((*lst)->file_name);
-		(*lst) = tmp;
 		free(*lst);
+		(*lst) = tmp;
 	}
 	lst = NULL;
 }

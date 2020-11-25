@@ -6,7 +6,7 @@
 #    By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/13 17:59:32 by fermelin          #+#    #+#              #
-#    Updated: 2020/11/24 13:31:15 by fermelin         ###   ########.fr        #
+#    Updated: 2020/11/25 15:55:01 by fermelin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,10 @@ SRC =	main.c \
 		execve_test.c \
 		error_handling.c \
 		pipes.c \
-		p_lists.c
+		p_lists.c \
+		redirections.c \
+		parser.c \
+		env_vars_utils.c
 
 OBJ = $(SRC:.c=.o)
 
