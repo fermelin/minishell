@@ -1,6 +1,7 @@
-#include "../libft/libft.h"
-#include "../minishell.h"
+#include "libft.h"
+#include "minishell.h"
 
+#ifdef ANTON
 void			check_flags(char *str, t_data **temp, int i)
 {
 	if (str[i] == '|')
@@ -11,11 +12,10 @@ void			check_flags(char *str, t_data **temp, int i)
 		(*temp)->red_to = 1;
 	else if (str[i] == '>' && str[i + 1] == '>')
 		(*temp)->doub_red_to = 1;
-	else
-		;
 	// (*temp)->next = p_lstnew();
 	// *temp = (*temp)->next;
 }
+
 
 void				parser(char *str, t_all *all)
 {
@@ -46,32 +46,73 @@ void				parser(char *str, t_all *all)
 				i++;
 			start = i + 1;
 			temp->next = p_lstnew();
+			if (temp->pipe)		//new
+				temp->next->pipe_behind = 1;		//new
 			temp = temp->next;
 		}
 	}
 	line_search(str, &temp, start, i - 1); // когда дошли до конца строки, либо если разделителя не было
 }
 
+#endif
+
+char			*get_line(void)
+{
+	static char *line2;
+	char		*line;
+	int			ret;
+
+	line2 = NULL;
+	while ((ret = get_next_line(0, &line)) != 1)
+	{
+		if (ret == -1)
+		{
+			error_message("GNL error");
+			return (NULL);
+		}
+		if ((!line || !(*line)) && (!line2 || !(*line2)))
+			return (NULL);
+		else if (*line)
+		{
+			line2 = ft_strjoin(line2, line);
+			line = NULL;
+		}
+	}
+	if (line2 && (*line2))
+		line = ft_strjoin(line2, line);
+	return (line);
+}
+
+
 void			start_loop(t_all *all)
 {
 	char 		*line;
+	// int			ret;
 
+	line = NULL;
 	ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
-	while (get_next_line(0, &line) > 0)
+	while (1)
 	{
-		parser(line, all);
-		all->head = all->data;
-		if (execution(all) == 0)
-			break ;	
-		if (all->child_killed != 1)
-			ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
-		all->child_killed = 0;
-		free (line);
-		line = NULL;
-		p_lstclear(&(all->head));
-		// if (all->child_killed != 1)
-			// ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
-		all->child_killed = 0;
+			if ((line = get_line()) == NULL)
+				break ;
+			if (line && (*line))
+#ifdef ANTON
+				parser(line, all);
+#endif
+#ifndef ANTON
+				parser(all);
+#endif
+			all->head = all->data;
+			// all->data = all->head;
+			if (execution(all) == 0)
+				break ;
+			if (all->child_killed != 1)
+				ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
+			all->child_killed = 0;
+			free (line);
+			line = NULL;
+			p_lstclear(&(all->head));
+
 	}
 	free(line);
 	ft_putendl_fd("exit", 1);
@@ -84,6 +125,8 @@ int				main(int argc, char **argv, char **envp)
 	all.exit_status = 0;
 	signal(SIGINT, ctrl_c_handler);
 	signal(SIGQUIT, ctrl_c_handler);
+	signal(SIGQUIT, ctrl_c_handler);
+	// signal('\t', SIG_IGN);
 	if (argc != 1 || !argv)
 	{
 		ft_putendl_fd("No parameters needed", 2);

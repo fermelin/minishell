@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 15:09:13 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/25 17:40:46 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/26 19:09:19 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static	void	env_vars_sort(t_all *all, int **mass)
 		i++;
 	}
 }
+
 static	int	export_without_args(t_all *all)
 {
 	int		*mass;
@@ -133,7 +134,8 @@ int			ft_cd(char *path, t_all *all)
 	char	*cwd;
 	char	*oldpwd;
 
-	if ((!path || !(*path)) && (line_nbr = get_env_line_nbr("HOME=", all)) != -1)
+	if ((!path || !(*path) || ft_strncmp("~", path, 2) == 0) &&
+		(line_nbr = get_env_line_nbr("HOME=", all)) != -1)
 		path = all->env_vars[line_nbr] + 5;
 	if (path && chdir(path) == -1)
 	{

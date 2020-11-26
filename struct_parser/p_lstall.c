@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "minishell.h"
 
 t_data	*p_lstlast(t_data *lst)
 {

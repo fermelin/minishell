@@ -1,5 +1,5 @@
-#include "../libft/libft.h"
-#include "../minishell.h"
+#include "libft.h"
+#include "minishell.h"
 
 // сдвиг строки на один символ
 void line_shift(char **str, int j)

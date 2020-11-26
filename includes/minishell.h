@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/25 19:02:43 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/26 15:35:41 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <fcntl.h>
-#include "./libft/libft.h"
+#include "libft.h"
 
 typedef struct		s_data
 {
@@ -47,6 +47,8 @@ typedef	struct		s_all
 	int				fildes2[2];
 	int				save0;
 	int				save1;	//pipes and redirections may conflict about it
+	int				save0_red;
+	int				save1_red;
 
 	t_data			*data;
 	t_data			*head;
@@ -88,7 +90,9 @@ void	envp_saving(char **envp, t_all *all);
 **		to delete to delete to delete to delete 
 */
 void	parser_to_list(t_all *all, char **splited);
-// void	parser(t_all *all);
+#ifndef ANTON
+void	parser(t_all *all);
+#endif
 int		execution(t_all *all);
 int		choose_command(t_all *all);
 /*

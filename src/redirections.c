@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/20 10:35:07 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/25 16:52:11 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/26 14:02:26 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	output_to_file(t_all *all)
 		if ((fd = open(all->data->file_name, O_WRONLY | O_CREAT | O_APPEND, 0644)) == -1)
 			return ;
 	}
-	all->save1 = dup(1);
+	all->save1_red = dup(1);
 
 	dup2(fd, 1);
 	if (close(fd) == -1)
@@ -44,7 +44,7 @@ void	input_from_file(t_all *all)
 		error_message("open");
 		return ;
 	}
-	all->save0 = dup(0);
+	all->save0_red = dup(0);
 	dup2(fd, 0);
 	if (close(fd) == -1)
 		error_message("close fd while input_from_file");

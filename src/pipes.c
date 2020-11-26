@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/24 12:43:24 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/25 16:52:05 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/26 14:01:53 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,14 @@ void	close_file_or_pipe_read(t_all *all)
 	}
 	if (all->data->red_to == 1 || all->data->doub_red_to == 1)
 	{
-		dup2(all->save1, 1);
-		if (close(all->save1) == -1)
+		dup2(all->save1_red, 1);
+		if (close(all->save1_red) == -1)
 			error_message("close save1 while red_to");
 	}
 	else if (all->data->red_from == 1)
 	{
-		dup2(all->save0, 0);
-		if (close(all->save0) == -1)
+		dup2(all->save0_red, 0);
+		if (close(all->save0_red) == -1)
 			error_message("close save0 while red_from");
 	}
 }

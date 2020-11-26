@@ -6,11 +6,13 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 15:10:21 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/25 15:14:19 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/26 15:52:16 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+#ifndef ANTON
 
 int		is_redirection(char *sign)
 {
@@ -90,23 +92,13 @@ void	parser(t_all *all)
 	char	*line;
 	char	**splited;
 
-	while (get_next_line(0, &line) > 0)
-	{
 		if ((splited = ft_split(line, ' ')))
 		{
 			all->data = p_lstnew();
 			all->head = all->data;
 			parser_to_list(all, splited);
-			if (execution(all) == 0)
-				break ;		//free all before exit
 		}
-		free(line);
-		line = NULL;
-		p_lstclear(&(all->head));
-		free_ptrs_array(splited);
-		if (all->child_killed != 1)
-			ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
-		all->child_killed = 0;
-	}
-	ft_putendl_fd("exit", 1);
+
 }
+
+#endif

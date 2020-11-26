@@ -1,5 +1,5 @@
-#include "../libft/libft.h"
-#include "../minishell.h"
+#include "libft.h"
+#include "minishell.h"
 
 
 void	error_malloc()
@@ -17,7 +17,7 @@ void filling_struct(t_data **elem, t_list *new, int len)
 	temp = *elem;
 	while (temp->next)
 		temp = temp->next;
-	temp->args = ft_calloc(len + 1, sizeof(char *));
+	temp->args = ft_calloc(len + 1, sizeof(char *));		//temp->args = (char **)malloc(sizeof(char*) * (len + 1)) 
 	while(new)
 	{
 		temp->args[i] = new->content;
