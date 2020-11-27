@@ -6,7 +6,7 @@
 #    By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/13 17:59:32 by fermelin          #+#    #+#              #
-#    Updated: 2020/11/26 17:50:06 by fermelin         ###   ########.fr        #
+#    Updated: 2020/11/27 15:36:12 by fermelin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ LIBFT = $(LIBFTDIR)libft.a
 
 CC = gcc
 
-CFLAGS = -g -Wall -Werror -Wextra -I./libft -I./includes #-D ANTON=1
+CFLAGS = -g -Wall -Werror -Wextra -I./libft -I./includes -D ANTON=1
 
 all:	$(NAME)
 

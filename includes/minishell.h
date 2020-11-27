@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/26 15:35:41 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/27 19:03:25 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,27 @@
 #include <fcntl.h>
 #include "libft.h"
 
+
+typedef struct		s_data
+{
+	char			**args;
+	int				pipe;
+	int				pipe_behind;
+	int				redir;
+	struct s_data	*next;
+}					t_data;
+
+
+
 typedef struct		s_data
 {
 	char			**args;
 	char			*file_name;
 	int				pipe;
 	int				pipe_behind;
-	int				red_to;
-	int				doub_red_to;
-	int				red_from;
+	int				red_to;		
+	int				doub_red_to;			
+	int				red_from;			
 	struct s_data	*next;
 }					t_data;
 
@@ -56,6 +68,31 @@ typedef	struct		s_all
 
 
 
+
+
+
+
+
+
+// typedef struct		s_data
+// {
+// 	int				token_type[4];
+// 	char			*args;
+// 	int				pipe;
+// 	int				pipe_behind;
+
+// 	enum e_type
+// 	{
+// 		RED_TO,
+// 		RED_FROM,
+// 		DOUB_RED_TO,
+
+// 	};
+
+
+// }					t_data;
+
+
 /*
 **		builtins
 */
@@ -64,6 +101,7 @@ int		ft_pwd(void);
 int		ft_env(t_all *all);
 int		ft_unset(t_all *all, char **args);
 int		ft_export(t_all *all, char **args);
+int		ft_echo(char **args);
 /*
 **		utils
 */

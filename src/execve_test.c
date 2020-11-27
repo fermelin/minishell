@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/25 19:34:14 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/27 12:59:48 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,7 @@ int		exec_cmds(t_all *all, char **argv)
 
 	pid = fork();
 	if (pid == 0)
-	{
 		child_process(all, argv);
-	}
 	else
 	{
 		wait(&status);

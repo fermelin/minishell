@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 15:21:15 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/25 17:41:45 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/27 14:31:11 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,31 @@ int		ft_unset(t_all *all, char **args)
 		}
 		i++;
 	}
+	return (0);
+}
+
+int		ft_echo(char **args)
+{
+	size_t	i;
+	int		n_flag;
+
+	n_flag = 0;
+	if (args)
+	{
+		i = 0;
+		if (args[i] && ft_strncmp("-n", args[i], 3) == 0)
+		{
+			n_flag = 1;
+			i++;
+		}
+		while (args[i])
+		{
+			ft_putstr_fd(args[i], 1);
+			i++;
+		}
+	}
+	if (n_flag == 0)
+		ft_putchar_fd('\n', 1);
 	return (0);
 }
 
