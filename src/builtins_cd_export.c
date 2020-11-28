@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 15:09:13 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/26 19:09:19 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/28 15:59:02 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,8 +139,7 @@ int			ft_cd(char *path, t_all *all)
 		path = all->env_vars[line_nbr] + 5;
 	if (path && chdir(path) == -1)
 	{
-		ft_putstr_fd("cd: ", 2);
-		error_message(path);
+		print_error("cd", path, strerror(errno));
 		return (1);
 	}
 	cwd = getcwd(NULL, 0);

@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 15:29:03 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/27 15:39:03 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/28 13:31:23 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ctrl_c_handler(int signum)
 {
 	signum = 0;
-	// ft_putstr_fd("\b\b  \n> \033[1;35m$\033[0m ", 1);
+	ft_putstr_fd("\b\b  \n> \033[1;35m$\033[0m ", 1);
 }
 
 void	free_ptrs_array(char **ptr_array)

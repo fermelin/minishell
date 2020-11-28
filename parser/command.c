@@ -10,35 +10,43 @@ void line_shift(char **str, int j)
 
 int delete_symbol(char **str, int i, char c)
 {
-	int flag;
+    int flag;
+    int check; //для запоминания переменной окружения
 
-	flag = 0;
-	if (c == '\"') // для экранирования специальных символом $\"
-		flag = 1;
-	if (c == '\\')
-		line_shift(str, ((i++) - 1));
-	else
-	{
-		line_shift(str, (i - 1));
-		while ((*str)[i] != c && ((*str)[i]))
-		{
-			if (flag == 1 && (*str)[i] == '\\' && ((*str)[i + 1] == '$' ||
-				(*str)[i + 1] == '\\' || (*str)[i + 1] == '\"'))
-				line_shift(str, (i - 1));
-			i++;
-		}
-		if ((*str)[i] != c)
-			(*str)[i] = c;
-		line_shift(str, (i - 1));
-	}
-	return (i);
+    check = -1;
+    flag = 0;
+    if (c == '\"') // для экранирования специальных символом $\"
+        flag = 1;
+    if (c == '\\')
+        line_shift(str, ((i++) - 1));
+    else
+    {
+        line_shift(str, (i - 1));
+        while ((*str)[i] != c && ((*str)[i]))
+        {
+            //для обработки доллара
+            if ((*str)[i] == '$' && (*str)[i - 1] != '\\' &&
+                (ft_isalnum((*str)[i + 1]) || (*str)[i + 1] == '_'))
+                check = i;
+            // -------------------------------------------------------
+            if (flag == 1 && (*str)[i] == '\\' && ((*str)[i + 1] == '$' ||
+                (*str)[i + 1] == '\\' || (*str)[i + 1] == '\"'))
+                line_shift(str, (i - 1));
+            i++;
+        }
+        if ((*str)[i] != c)
+            (*str)[i] = c;
+        line_shift(str, (i - 1));
+    }
+    if (check > -1)
+        return (check);
+    return (i);
 }
 
 // убираем кавычки, согласно синтаксису bash
-void			syntax_check(char *str, int *arr, t_list **new)
+void			syntax_check(t_all *all, char *str, int *arr, t_list **new)
 {
 	int			i;
-	int			j;
 	char		*word;
 	t_list		*temp;
 
@@ -49,17 +57,7 @@ void			syntax_check(char *str, int *arr, t_list **new)
 	while (++arr[0] < arr[1])
 		word[++i] = str[arr[0]];
 	word[i + 1] = '\0';
-	i = 0;
-	while (word[i])
-	{
-		if (word[i] == '\'' || word[i] == '\"' || word[i] == '\\')
-		{
-			j = delete_symbol(&word, i, word[i]);
-			i = j;
-		}
-		else
-			i++;
-	}
+	word = search_variable(all, &word);
 	if (temp->content == NULL)
 		temp->content = word;
 	else
@@ -67,7 +65,7 @@ void			syntax_check(char *str, int *arr, t_list **new)
 }
 
 
-void			arguments_search(char *str, t_data **elem)
+void			arguments_search(char *str, t_all *all)
 {
 	int			arr[2];
 	int			one_quotes;
@@ -82,29 +80,32 @@ void			arguments_search(char *str, t_data **elem)
 	while (str[++arr[1]])
 	{
 		// последние два условия для корректной обработки аргументов при экранировании (например, \'\"\\ "\hello\$PWD")
-		if (str[arr[1]] == '\'' && str[arr[1] - 1] != '\\') 
-			one_quotes++;
-		else if (str[arr[1]] == '\"' && str[arr[1] - 1] != '\\')
-			two_quotes++;
+		if(str[arr[1]] == '\'')
+			one_quotes = counting_quotes(str, one_quotes, two_quotes, arr[1]);
+		else if(str[arr[1]] == '\"')
+			two_quotes = counting_quotes(str, one_quotes, two_quotes, arr[1]);
 		else if (str[arr[1]] == ' ' && one_quotes % 2 == 0 && two_quotes % 2 == 0)
 		{
-			syntax_check(str, arr, &new);
+			syntax_check(all, str, arr, &new);
 			while (str[arr[1]++] == ' ')
 				arr[0] = arr[1];
 			arr[1] = arr[0] - 1;
 		}
 	}
-	syntax_check(str, arr, &new);
-	filling_struct(elem, new, ft_lstsize(new));
+	syntax_check(all, str, arr, &new);
+	filling_struct(&all->data, new, ft_lstsize(new));
 	ft_lstclear(&new, NULL);
 }
 
 // строка для обработки
-void			line_search(char *line, t_data **elem, int start, int end)
+void			line_search(char *line, t_all *all, int start, int end)
 {
 	char		*str;
 	int			j;
+	t_data		*temp; // temporary
+	// int			i; // temporary
 
+	temp = all->data;
 	if (end >= start)
 	{
 		while (line[start] == ' ') // убрали пробелы в начале строки
@@ -119,7 +120,23 @@ void			line_search(char *line, t_data **elem, int start, int end)
 		while (++start < end)
 			str[++j] = line[start];
 		str[j + 1] = '\0';
-		arguments_search(str, elem);
+		arguments_search(str, all);
+		// while (temp)
+		// {
+		// 	printf("|New string|\n");
+		// 	i = 0;
+		// 	while (temp->args[i])
+		// 	{
+		// 		printf("|%s|\n", temp->args[i]);
+		// 		i++;
+		// 	}
+		// 	printf("%d\n", temp->pipe);
+		// 	printf("%d\n", temp->pipe_behind);
+		// 	printf("%d\n", temp->red_to);
+		// 	printf("%d\n", temp->doub_red_to);
+		// 	printf("%d\n", temp->red_from);
+		// 	temp = temp->next;
+		// }
 		free(str);
 	}
 }

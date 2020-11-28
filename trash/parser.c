@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 15:10:21 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/26 15:52:16 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/28 13:44:07 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,8 @@ void	parser_to_list(t_all *all, char **splited)
 	splited = beginning_s;
 }
 
-void	parser(t_all *all)
+void	my_parser(char *line, t_all *all)
 {
-	char	*line;
 	char	**splited;
 
 		if ((splited = ft_split(line, ' ')))

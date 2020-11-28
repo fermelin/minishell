@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/27 12:59:48 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/28 15:48:53 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,8 @@ int		child_process(t_all *all, char **argv)
 		execve_ret = execve(path, argv, all->env_vars);
 		free(path);
 	}
-	else
-	{
-		ft_putstr_fd("msh: command not found: ", 2);
-		ft_putendl_fd(argv[0], 2);
-	}
-	if (execve_ret == -1)
-		error_message("execve");
-	exit(execve_ret);
+	print_error(argv[0], "", CMD_NOT_FOUND);
+	exit (127);
 }
 
 int		exec_cmds(t_all *all, char **argv)
@@ -54,6 +48,8 @@ int		exec_cmds(t_all *all, char **argv)
 	else
 	{
 		wait(&status);
+		// waitpid(pid, &status, WNOHANG | WUNTRACED);
+		all->exit_status = WEXITSTATUS(status);
 		if (WIFSIGNALED(status))	// change it to SIGCHLD
 			all->child_killed = 1;
 	}
