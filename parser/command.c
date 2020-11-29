@@ -140,3 +140,40 @@ void			line_search(char *line, t_all *all, int start, int end)
 		free(str);
 	}
 }
+
+// void			line_search(char *line, t_all *all, int start, int end)
+// {
+// 	char		*str;
+// 	int			j;
+// 	t_data		*temp; // temporary
+// 	int			i; // temporary	// 
+// 	temp = all->data;
+// 	if (start <= end)
+// 	{
+// 		while (line[start] == ' ') // убрали пробелы в начале строки
+// 			start++;
+// 		while (line[end] == ' ')
+// 			end--;
+// 		if (line[end] != ' ')
+// 			end++;
+// 		if (!(str = (char *)malloc(sizeof(char) * ((end + 1) - (start--))))) // почистить
+// 			return (error_malloc());
+// 		j = -1;
+// 		while (++start < end)
+// 			str[++j] = line[start];
+// 		str[j + 1] = '\0';
+// 		arguments_search(str, all);
+// 		while (temp)
+// 		{
+// 			printf("|New string|\n");
+// 			i = 0;
+// 			while (temp->args[i])
+// 			{
+// 				printf("|%s|\n", temp->args[i]);
+// 				i++;
+// 			}
+// 			temp = temp->next;
+// 		}
+// 		free(str);
+// 	}
+// }

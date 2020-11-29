@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/29 18:36:11 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/29 20:29:12 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ void	close_file(t_all *all);
 void	close_pipe_read(t_all *all);
 
 int		counting_quotes(char *str, int one_quotes, int two_quotes, int i);
-int		check_dollar(t_all *all, char **word, int i);
+int		check_dollar(t_all *all, char **word, int start, int *arr);
 char	*get_env_str(char *key, t_all *all);
 int		delete_symbol(char **str, int i, char c);
 void	search_variable(t_all *all, char **word, char *str, int *arr);

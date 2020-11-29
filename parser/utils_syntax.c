@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:58:44 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/29 19:14:50 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/29 20:18:06 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@
 // 	return ((*word));
 // }
 
-int         check_dollar(t_all *all, char **word, int start)
+int         check_dollar(t_all *all, char **word, int i, int *arr)
 {
 	int     len;
 	char    *tmp;
@@ -93,19 +93,19 @@ int         check_dollar(t_all *all, char **word, int start)
 
 	question_mark = 0;
 	tmp = ft_strdup((*word)); //сохранили слово
-	if (((*word)[start]) == '?')
+	if (((*word)[i]) == '?')
 	{
 		question_mark = 1;
 		tempory = ft_itoa(all->exit_status);
 	}
-	else if (!(tempory = get_env_str(((*word) + start), all)))
+	else if (!(tempory = get_env_str(((*word) + i), all)))
 		tempory = ft_strdup(""); //почистить
 	len = ft_strlen(tempory);
 	free(*word);
 	*word = NULL;
-	(*word) = ft_calloc(ft_strlen(tmp) + len + 1, sizeof(char)); // выделили новую память с учетом переменной окружения
+	(*word) = ft_calloc((arr[1] - arr[0]) + len + 1, sizeof(char)); // выделили новую память с учетом переменной окружения
 	len = -1;
-	while(++len < start)
+	while(++len < i)
 		(*word)[len] = tmp[len]; // копируем строку обратно в (*word) до знака $
 		// после того как дошли до доллара, то вместо названия переменной окружения добавали путь
 	ft_strlcat((*word), tempory, ft_strlen(tempory) + ft_strlen(*word) + 1);
@@ -123,10 +123,13 @@ void    search_variable(t_all *all, char **word, char *str, int *start)
 	int     two_quotes;
 	int     check;  // для переменной окружения
 	int     num;  // для обработки $1234 вот такого случая с оригинальным bash
+	int		arr[2]; 
 
 	i = 0;
 	one_quotes = 0;
 	two_quotes = 0;
+	arr[0] = start[0];
+	arr[1] = start[1];
 
 	while (start[0] < start[1])
 	{
@@ -150,7 +153,7 @@ void    search_variable(t_all *all, char **word, char *str, int *start)
 				start[0]++;
 				i++;
 			}
-			i = check_dollar(all, word, check); //возвращает длину строки word  с подставленной переменной окружения
+			i = check_dollar(all, word, check, arr); //возвращает длину строки word  с подставленной переменной окружения
 			start[0]--;
 			i--;
 		}
@@ -196,6 +199,7 @@ void    search_variable(t_all *all, char **word, char *str, int *start)
 		start[0]++;
 		i++;
 	}
+	(*word)[i + 1] = '\0';
 	// return ((*word));
 }
 
