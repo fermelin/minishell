@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 18:48:33 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/28 21:58:40 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/29 18:34:47 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		choose_command(t_all *all)
 	else if (ft_strncmp("echo", all->data->args[0], 5) == 0)
 		all->exit_status = ft_echo(all->data->args + 1);
 	else if (ft_strncmp("q", all->data->args[0], 2) == 0)			//to delete to delete to delete to delete to delete 
-		return (0);
+		exit (0);
 	else if (ft_strncmp("exit", all->data->args[0], 5) == 0)
 		ft_exit(all->data->args + 1);
 	else if (all->data->args && *all->data->args)
@@ -56,24 +56,26 @@ void	setting_pipes_and_redirections(t_all *all)
 
 	i = 0;
 	open_pipe_write_and_close_read(all);
-	while (all->data->redir_array[i])
-	{
-		if ((all->data->redir = what_redirection(all->data->redir_array[i])))
+	if (all->data->redir_array)
+		while (all->data->redir_array[i])
 		{
+			if ((all->data->redir = what_redirection(all->data->redir_array[i])))
+			{
+				i++;
+				if (all->data->redir == 3)
+					input_from_file(all, all->data->redir_array[i]);
+				else
+					output_to_file(all, all->data->redir_array[i]);
+			}
 			i++;
-			if (all->data->redir == 3)
-				input_from_file(all, all->data->redir_array[i]);
-			else
-				output_to_file(all, all->data->redir_array[i]);
+			if (all->data->redir_array[i])
+				close_file(all);
 		}
-		i++;
-		if (all->data->redir_array[i])
-			close_file(all);
-	}
 }
 
 int		execution(t_all *all)
 {
+	
 	while (all->data)			//I could use automatic variable and not save the head
 	{
 		// open_pipe_write_and_close_read(all);

@@ -6,16 +6,12 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/28 15:48:53 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/29 08:44:28 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	ctrl_backslash_handler(int signum)
-// {
-
-// }
 
 int		child_process(t_all *all, char **argv)
 {

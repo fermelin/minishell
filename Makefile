@@ -6,7 +6,7 @@
 #    By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/13 17:59:32 by fermelin          #+#    #+#              #
-#    Updated: 2020/11/28 13:49:33 by fermelin         ###   ########.fr        #
+#    Updated: 2020/11/29 08:45:25 by fermelin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ SRC =	src/builtins_cd_export.c \
 		parser/utils_parser.c \
 		struct_parser/p_lstall.c \
 		struct_parser/p_lstnew.c \
-		trash/parser.c 
+# 		trash/parser.c 
 # 		trash/main.c \
 # 		trash/p_lists.c \
 
@@ -42,9 +42,9 @@ CC = gcc
 
 CFLAGS = -g -Wall -Werror -Wextra -I./libft -I./includes 
 
-ifdef ANTON
-CFLAGS += -D ANTON=1
-endif
+# ifdef ANTON
+# CFLAGS += -D ANTON=1
+# endif
 
 all:	$(NAME)
 
@@ -66,8 +66,8 @@ fclean: clean
 		make fclean -C $(LIBFTDIR)
 		rm -f $(NAME)
 
-anton: 
-	$(MAKE) ANTON=1 re
+# anton: 
+# 	$(MAKE) ANTON=1 re
 
 re: fclean all
 

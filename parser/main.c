@@ -1,19 +1,6 @@
 #include "libft.h"
 #include "minishell.h"
 
-#ifdef ANTON
-// void			check_flags(char *str, t_data *temp, int i)
-// {
-// 	if (str[i] == '|')
-// 		temp->pipe = 1;
-// 	else if (str[i] == '<')
-// 		temp->red_from = 1;
-// 	else if (str[i] == '>' && str[i + 1] != '>')
-// 		temp->red_to = 1;
-// 	else if (str[i] == '>' && str[i + 1] == '>')
-// 		temp->doub_red_to = 1;
-// }
-
 int			counting_quotes(char *str, int one_quotes, int two_quotes, int i)
 {
 	if(str[i] == '\'')
@@ -33,6 +20,13 @@ int			counting_quotes(char *str, int one_quotes, int two_quotes, int i)
 	return (0);
 }
 
+void	temporary_loop(t_all *all)
+{
+	if (execution(all) == 0)
+		exit (0);
+
+}
+
 void				parser(char *str, t_all *all)
 {
 	int			i;
@@ -44,74 +38,40 @@ void				parser(char *str, t_all *all)
 	start = 0;
 	one_quotes = 0;
 	two_quotes = 0;
-	all->data = p_lstnew();
-	all->head = all->data;
+	all->head = p_lstnew();
+	all->data = all->head;
+	all->tmp = all->data;
 	while (str[++i]) //поиск разделителя
 	{
 		if(str[i] == '\'')
 			one_quotes = counting_quotes(str, one_quotes, two_quotes, i);
 		else if(str[i] == '\"')
 			two_quotes = counting_quotes(str, one_quotes, two_quotes, i);
-		else if ((str[i] == ';' || str[i] == '|')  && //|| str[i] == '<' || str[i] == '>')
+		else if ((str[i] == ';') && //|| str[i] == '|')  && //|| str[i] == '<' || str[i] == '>')
 				(one_quotes % 2 == 0 && two_quotes % 2 == 0))
 		{
-			if (str[i] == '|')
-				all->data->pipe = 1; // установка флагов под разделители
+			// if (str[i] == '|')
+			// 	all->data->pipe = 1; // установка флагов под разделители
+			all->tmp = all->data;
 			line_search(str, all, start, i - 1); // обработка одной линии (строки) до разделителя
+			all->data = all->tmp;
+			if (execution(all) == 0)
+				exit (0);
+			all->data = all->tmp;
 			if (str[i] == '>' && str[i + 1] == '>')
 				i++;
 			start = i + 1;
-			all->data->next = p_lstnew();
-			if (all->data->pipe)
-				all->data->next->pipe_behind = 1;
-			all->data = all->data->next;
+			p_lstclear(&(all->head));
+			all->head = p_lstnew();
+			all->data = all->head;
+			// // if (all->data->pipe)
+			// // 	all->data->next->pipe_behind = 1;
+			// all->data = all->data->next;
 		}
 	}
 	line_search(str, all, start, i - 1); // когда дошли до конца строки, либо если разделителя не было
+	all->data = all->tmp;
 }
-
-// void				parser(char *str, t_all *all)
-// {
-// 	int			i;
-// 	int			start;
-// 	int			one_quotes;
-// 	int			two_quotes;
-// 	// t_data		*temp;
-
-// 	i = -1;
-// 	start = 0;
-// 	one_quotes = 0;
-// 	two_quotes = 0;
-// 	all->data = p_lstnew();
-// 	all->head = all->data;
-// 	// temp = all->data;  // coхранили голову
-// 	while (str[++i]) //поиск разделителя
-// 	{
-//         if (str[i] == '\"')
-//             two_quotes++;
-//         if (str[i] == '\"' && str[i - 1] == '\\')
-//             two_quotes--;
-//         else if (str[i] == '\'')
-//             one_quotes++;
-// 		else if ((str[i] == ';' || str[i] == '|' || str[i] == '<' || str[i] == '>') &&
-// 				(one_quotes % 2 == 0 && two_quotes % 2 == 0))
-// 		{
-// 			check_flags(str, all->data, i); // установка флагов под разделители
-// 			line_search(str, all, start, i - 1); // обработка одной линии (строки) до разделителя
-// 			if (str[i] == '>' && str[i + 1] == '>')
-// 				i++;
-// 			start = i + 1;
-// 			all->data->next = p_lstnew();
-// 			if (all->data->pipe)
-// 				all->data->next->pipe_behind = 1;
-// 			// execution(all);								//added by myself
-// 			all->data = all->data->next;
-// 		}
-// 	}
-// 	line_search(str, all, start, i - 1); // когда дошли до конца строки, либо если разделителя не было
-// }
-
-#endif
 
 char			*get_line(void)
 {
@@ -142,13 +102,7 @@ char			*get_line(void)
 
 void	start_checker(t_all *all, char *argv)
 {
-#ifdef ANTON
-				parser(argv, all);
-#endif
-#ifndef ANTON
-				my_parser(argv, all);
-#endif
-	all->data = all->head;
+	parser(argv, all);
 	if (execution(all) == 0)
 		;
 	p_lstclear(&(all->head));
@@ -157,31 +111,26 @@ void	start_checker(t_all *all, char *argv)
 void			start_loop(t_all *all)
 {
 	char 		*line;
-	// int			ret;
 
 	line = NULL;
 	ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
 	while (1)
 	{
-			if ((line = get_line()) == NULL)
-				break ;
-			if (line && (*line))
-#ifdef ANTON
-				parser(line, all);
-#endif
-#ifndef ANTON
-				my_parser(line, all);
-#endif
-			all->head = all->data;
-			if (execution(all) == 0)				//uncomment
-				break ;								//uncomment
-			if (all->child_killed != 1)
-				ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
-			all->child_killed = 0;
-			free (line);
-			line = NULL;
-			p_lstclear(&(all->head));
+		if ((line = get_line()) == NULL)
+			exit(0);						//print exit before it
 
+		if (line && (*line))
+		{
+			parser(line, all);
+		}
+		if (execution(all) == 0)				//uncomment
+			exit(0);								//uncomment
+		if (all->child_killed != 1)
+			ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
+		all->child_killed = 0;
+		free (line);
+		line = NULL;
+		p_lstclear(&(all->head));
 	}
 	free(line);
 	ft_putendl_fd("exit", 1);

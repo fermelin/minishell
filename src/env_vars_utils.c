@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 15:29:03 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/28 13:31:23 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/29 19:14:05 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,5 @@ char	*get_env_str(char *key, t_all *all)
 	key_len = ft_strlen(key);
 	if (all->env_vars[nbr][key_len] != '=')
 		return (NULL);
-	return (&(all->env_vars[nbr][key_len + 1]));
+	return (ft_strdup(&(all->env_vars[nbr][key_len + 1])));
 }

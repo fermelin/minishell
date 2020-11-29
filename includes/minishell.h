@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/28 21:27:36 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/11/29 18:36:11 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,22 @@
 #include "libft.h"
 #include "errors.h"
 
+	typedef enum e_type
+	{
+		END,
+		ARG,
+		REDIR,
+		PIPE,
+		PIPE_BEHIND
+	}	t_type;
+
+	typedef enum e_redir
+	{
+		NO_RED,
+		RED_TO,
+		DOUB_RED_TO,
+		RED_FROM
+	}			t_redir;
 
 typedef struct		s_data
 {
@@ -36,20 +52,6 @@ typedef struct		s_data
 	int				redir;
 	struct s_data	*next;
 }					t_data;
-
-
-
-// typedef struct		s_data
-// {
-// 	char			**args;
-// 	char			*file_name;
-// 	int				pipe;
-// 	int				pipe_behind;
-// 	int				red_to;		
-// 	int				doub_red_to;			
-// 	int				red_from;
-// 	struct s_data	*next;
-// }					t_data;
 
 typedef	struct		s_all
 {
@@ -63,8 +65,9 @@ typedef	struct		s_all
 	int				save1;	//pipes and redirections may conflict about it
 	int				save0_red;
 	int				save1_red;
-
+	t_type			type;
 	t_data			*data;
+	t_data			*tmp;
 	t_data			*head;
 }					t_all;
 
@@ -83,13 +86,6 @@ typedef	struct		s_all
 // 	int				pipe;
 // 	int				pipe_behind;
 
-// 	enum e_type
-// 	{
-// 		RED_TO,
-// 		RED_FROM,
-// 		DOUB_RED_TO,
-
-// 	};
 
 
 // }					t_data;
@@ -136,10 +132,6 @@ void	print_error(char *command, char *argument, char *error_message);
 /*
 **		to delete to delete to delete to delete 
 */
-void	parser_to_list(t_all *all, char **splited);
-#ifndef ANTON
-void	my_parser(char *line, t_all *all);
-#endif
 int		execution(t_all *all);
 int		choose_command(t_all *all);
 /*
@@ -153,7 +145,28 @@ int		what_redirection(char *sign);
 /*
 **		parser
 */
-void 	filling_struct(t_data **elem, t_list *new, int len);
+// void 	filling_struct(t_all *all, t_list *new, int len);
+// void	line_search(char *line, t_all *all, int start, int end);
+// t_data	*p_lstnew(void);
+// void	p_lstadd_back(t_data **lst, t_data *new);
+// void	p_lstclear(t_data **lst);
+// t_data	*p_lstlast(t_data *lst);
+// int		p_lstsize(t_data *lst);
+// void	p_lstdelone(t_data *lst, void (*del)(void*));
+// void	error_malloc();
+// int        check_dollar(t_all *all, char **word, int i);
+// char		*search_variable(t_all *all, char **word);
+// int delete_symbol(char **str, int i, char c);
+// int			counting_quotes(char *str, int one_quotes, int two_quotes, int i);
+void	close_file(t_all *all);
+void	close_pipe_read(t_all *all);
+
+int		counting_quotes(char *str, int one_quotes, int two_quotes, int i);
+int		check_dollar(t_all *all, char **word, int i);
+char	*get_env_str(char *key, t_all *all);
+int		delete_symbol(char **str, int i, char c);
+void	search_variable(t_all *all, char **word, char *str, int *arr);
+void 	filling_struct(t_all *all, t_list *new, int len);
 void	line_search(char *line, t_all *all, int start, int end);
 t_data	*p_lstnew(void);
 void	p_lstadd_back(t_data **lst, t_data *new);
@@ -162,11 +175,5 @@ t_data	*p_lstlast(t_data *lst);
 int		p_lstsize(t_data *lst);
 void	p_lstdelone(t_data *lst, void (*del)(void*));
 void	error_malloc();
-int        check_dollar(t_all *all, char **word, int i);
-char		*search_variable(t_all *all, char **word);
-int delete_symbol(char **str, int i, char c);
-int			counting_quotes(char *str, int one_quotes, int two_quotes, int i);
-void	close_file(t_all *all);
-void	close_pipe_read(t_all *all);
 
 #endif

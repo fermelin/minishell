@@ -8,43 +8,61 @@ void	error_malloc()
 		return ;
 }
 
-int	*split_args_and_redirects(char **array, t_data *elem)
+void	filling_struct_elem(int first_word, char **array, int *choice, t_all *all)
 {
+	int i;
+	int j;
+	int g;
+	// int h;
 
-	// t_list	*args;
-	// t_list	*redirs;
-	// t_list	*args_head;
-	// t_list	*redirs_head;
-	// i = 0;
-	// j = 0;
+	i = 0;
+	j = 0;
+	g = 0;
+	i = first_word;
+	while (choice[i] != END)
+	{
+		if (choice[i] == ARG)
+			all->data->args[j++] = array[i];
+		else if (choice[i] == REDIR)
+		{
+			all->data->redir_array[g++] = array[i++];
+			all->data->redir_array[g++] = array[i];
+		}
+		else if (choice[i] == PIPE)
+		{
+			all->data->pipe = 1;
+			all->data->next = p_lstnew();
+			all->data->next->pipe_behind = 1;
+			all->data = all->data->next;
+			break;
+		}
+		i++;
+	}
+}
 
-	// args = ft_lstnew(NULL);
-	// redirs = ft_lstnew(NULL);
-	// args_head = args;
-	// redirs_head = redirs;
-	// while (new)
-	// {
-	// 	while (new && what_redirection(new->content) == 0)
-	// 	{
-	// 		args->next = ft_lstnew(new->content);
-	// 		args = args->next;
-	// 		i++;
-	// 	}
-	// 	while (what_redirection(new->content) != 0 && new->next)
-	// 	{
-	// 		j += 2;
-	// 	}
+void	allocate_memory_for_struct(t_all *all, int args_count, int redirs_count)
+{
+	if (args_count != 0 && all->data && !(all->data->args = ft_calloc(args_count + 1, sizeof(char*))))
+		return ;
+	if (redirs_count != 0 && all->data)
+	{
+		if (!(all->data->redir_array = ft_calloc(redirs_count + 1, sizeof(char*))))
+			return ;
+		all->data->redir = 1;
+	}
+}
 
-	// }
-
-	// int	i;
+int	*split_args_and_redirects(char **array, t_all *all)
+{
 	int j;
 	int	redirs_count;
 	int	args_count;
 	int	*choice;
+	int	first_word;
+	enum	e_type;
 
 	j = 0;
-	// i = 0;
+	first_word = 0;
 	redirs_count = 0;
 	args_count = 0;
 	while (array[j])
@@ -54,37 +72,37 @@ int	*split_args_and_redirects(char **array, t_data *elem)
 	j = 0;
 	 while (array[j])
 	{
-		while (array[j] && what_redirection(array[j]) == 0)
+		while (array[j] && what_redirection(array[j]) == 0 && ft_strncmp("|", array[j], 2) != 0)
 		{
-			choice[j] = 1;
+			choice[j] = ARG;
 			args_count++;
 			j++;
 		}
 		while (array[j] && array[j + 1] && what_redirection(array[j]) != 0)
 		{
+			choice[j] = REDIR;
 			j += 2;
 			redirs_count += 2;
 		}
+		if (array[j] && ft_strncmp("|", array[j], 2) == 0)
+		{
+			allocate_memory_for_struct(all, args_count, redirs_count);
+			choice[j] = PIPE;
+			filling_struct_elem(first_word, array, choice, all);
+			j++;
+			first_word = j;
+			redirs_count = 0;
+			args_count = 0;
+		}
 	}
-	if (!(elem->args = ft_calloc(args_count + 1, sizeof(char*))))
-		return (0);
-	if (!(elem->redir_array = ft_calloc(redirs_count + 1, sizeof(char*))))
-		return (0);
-	if (redirs_count != 0)
-		elem->redir = 1;
+	allocate_memory_for_struct(all, args_count, redirs_count);
+	filling_struct_elem(first_word, array, choice, all);
 	return (choice);
-	
-	
-
-
 }
 
-void filling_struct(t_data **elem, t_list *new, int len)
+void filling_struct(t_all *all, t_list *new, int len)
 {
-	// int		args_count;
-	// int		redir_array_count;
-	t_data	*temp;
-	// t_list	*head;
+	t_list *new_copy;
 	char **array;
 	int		*choice;
 	int		i;
@@ -96,27 +114,22 @@ void filling_struct(t_data **elem, t_list *new, int len)
 	j = 0;
 	g = 0;
 	h = 0;
-
-	temp = *elem;
-	while (temp->next)
-		temp = temp->next;
+	new_copy = new;
+	// while (temp->next)
+	// 	temp = temp->next;
 
 	array = ft_calloc(len + 1, sizeof(char *));		//temp->args = (char **)malloc(sizeof(char*) * (len + 1)) 
-	while(new)
+	while(new_copy)
 	{
-		array[i] = new->content;
-		new = new->next;
+		array[i] = new_copy->content;
+		new_copy = new_copy->next;
 		i++;
 	}
-	choice = split_args_and_redirects(array, temp);
-	while (h < i)
-	{
-		if (choice[h] == 1)
-			temp->args[j++] = array[h];
-		else
-			temp->redir_array[g++] = array[h];
-		h++;
-	}
+	choice = split_args_and_redirects(array, all);
+	// elem = temp;
+	// {
+		
+	// }
 	free(choice);
 	free(array);
 }

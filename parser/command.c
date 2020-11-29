@@ -1,68 +1,87 @@
 #include "libft.h"
 #include "minishell.h"
 
-// сдвиг строки на один символ
-void line_shift(char **str, int j)
-{
-	while((*str)[++j])
-		(*str)[j] = (*str)[j + 1];
-}
+// // сдвиг строки на один символ
+// void line_shift(char **str, int j)
+// {
+// 	while((*str)[++j])
+// 		(*str)[j] = (*str)[j + 1];
+// }
 
-int delete_symbol(char **str, int i, char c)
-{
-    int flag;
-    int check; //для запоминания переменной окружения
+// int delete_symbol(char **str, int i, char c)
+// {
+//     int flag;
+//     int check; //для запоминания переменной окружения
 
-    check = -1;
-    flag = 0;
-    if (c == '\"') // для экранирования специальных символом $\"
-        flag = 1;
-    if (c == '\\')
-        line_shift(str, ((i++) - 1));
-    else
-    {
-        line_shift(str, (i - 1));
-        while ((*str)[i] != c && ((*str)[i]))
-        {
-            //для обработки доллара
-            if ((*str)[i] == '$' && (*str)[i - 1] != '\\' &&
-                (ft_isalnum((*str)[i + 1]) || (*str)[i + 1] == '_'))
-                check = i;
-            // -------------------------------------------------------
-            if (flag == 1 && (*str)[i] == '\\' && ((*str)[i + 1] == '$' ||
-                (*str)[i + 1] == '\\' || (*str)[i + 1] == '\"'))
-                line_shift(str, (i - 1));
-            i++;
-        }
-        if ((*str)[i] != c)
-            (*str)[i] = c;
-        line_shift(str, (i - 1));
-    }
-    if (check > -1)
-        return (check);
-    return (i);
-}
+//     check = -1;
+//     flag = 0;
+//     if (c == '\"') // для экранирования специальных символом $\"
+//         flag = 1;
+//     if (c == '\\')
+//         line_shift(str, ((i++) - 1));
+//     else
+//     {
+//         line_shift(str, (i - 1));
+//         while ((*str)[i] != c && ((*str)[i]))
+//         {
+//             //для обработки доллара
+//             if ((*str)[i] == '$' && (*str)[i - 1] != '\\' &&
+//                 (ft_isalnum((*str)[i + 1]) || (*str)[i + 1] == '_'))
+//                 check = i;
+//             // -------------------------------------------------------
+//             if (flag == 1 && (*str)[i] == '\\' && ((*str)[i + 1] == '$' ||
+//                 (*str)[i + 1] == '\\' || (*str)[i + 1] == '\"'))
+//                 line_shift(str, (i - 1));
+//             i++;
+//         }
+//         if ((*str)[i] != c)
+//             (*str)[i] = c;
+//         line_shift(str, (i - 1));
+//     }
+//     if (check > -1)
+//         return (check);
+//     return (i);
+// }
+
+// // убираем кавычки, согласно синтаксису bash
+// void			syntax_check(t_all *all, char *str, int *arr, t_list **new)
+// {
+// 	int			i;
+// 	char		*word;
+// 	t_list		*temp;
+
+// 	i = -1;
+// 	temp = *new;
+// 	if (!(word = (char *)malloc(sizeof(char) * ((arr[1] + 1) - (arr[0]--))))) // почистить
+// 		return (error_malloc());
+// 	while (++arr[0] < arr[1])
+// 		word[++i] = str[arr[0]];
+// 	word[i + 1] = '\0';
+// 	word = search_variable(all, &word);
+// 	if (temp->content == NULL)
+// 		temp->content = word;
+// 	else
+// 		ft_lstadd_back(&temp, ft_lstnew(word));
+// }
 
 // убираем кавычки, согласно синтаксису bash
 void			syntax_check(t_all *all, char *str, int *arr, t_list **new)
 {
 	int			i;
-	char		*word;
-	t_list		*temp;
+	char		*word = NULL;
+	// t_list		*temp;
 
 	i = -1;
-	temp = *new;
-	if (!(word = (char *)malloc(sizeof(char) * ((arr[1] + 1) - (arr[0]--))))) // почистить
+	// temp = *new;
+	if (!(word = ft_calloc((arr[1] + 1) - arr[0], sizeof(char)))) // почистить
 		return (error_malloc());
-	while (++arr[0] < arr[1])
-		word[++i] = str[arr[0]];
-	word[i + 1] = '\0';
-	word = search_variable(all, &word);
-	if (temp->content == NULL)
-		temp->content = word;
+	search_variable(all, &word, str, arr);
+	if ((*new)->content == NULL)
+		(*new)->content = word;
 	else
-		ft_lstadd_back(&temp, ft_lstnew(word));
+		ft_lstadd_back(new, ft_lstnew(word));
 }
+
 
 
 void			arguments_search(char *str, t_all *all)
@@ -93,7 +112,7 @@ void			arguments_search(char *str, t_all *all)
 		}
 	}
 	syntax_check(all, str, arr, &new);
-	filling_struct(&all->data, new, ft_lstsize(new));
+	filling_struct(all, new, ft_lstsize(new));
 	ft_lstclear(&new, NULL);
 }
 
@@ -102,10 +121,7 @@ void			line_search(char *line, t_all *all, int start, int end)
 {
 	char		*str;
 	int			j;
-	t_data		*temp; // temporary
-	// int			i; // temporary
 
-	temp = all->data;
 	if (end >= start)
 	{
 		while (line[start] == ' ') // убрали пробелы в начале строки
@@ -121,22 +137,6 @@ void			line_search(char *line, t_all *all, int start, int end)
 			str[++j] = line[start];
 		str[j + 1] = '\0';
 		arguments_search(str, all);
-		// while (temp)
-		// {
-		// 	printf("|New string|\n");
-		// 	i = 0;
-		// 	while (temp->args[i])
-		// 	{
-		// 		printf("|%s|\n", temp->args[i]);
-		// 		i++;
-		// 	}
-		// 	printf("%d\n", temp->pipe);
-		// 	printf("%d\n", temp->pipe_behind);
-		// 	printf("%d\n", temp->red_to);
-		// 	printf("%d\n", temp->doub_red_to);
-		// 	printf("%d\n", temp->red_from);
-		// 	temp = temp->next;
-		// }
 		free(str);
 	}
 }
