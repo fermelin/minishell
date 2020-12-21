@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/29 20:29:12 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/21 20:37:41 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,11 +113,12 @@ void	ctrl_c_handler(int signum);
 void	error_message(char *text_error);
 void	envp_saving(char **envp, t_all *all);
 char	*get_env_str(char *key, t_all *all);
-
+int		edit_or_add_env_line(char *key, char *value, t_all *all);
 /*
 **		errors handling
 */
 void	print_error(char *command, char *argument, char *error_message);
+void	print_unset_error(char *command, char *argument, char *error_message);
 // /*
 // **		to delete to delete to delete to delete 
 // */

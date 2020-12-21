@@ -136,6 +136,16 @@ void			start_loop(t_all *all)
 	ft_putendl_fd("exit", 1);
 }
 
+void			pwd_init(t_all *all)		//to delete to delete to delete to delete to delete 
+{
+	char *cwd;
+
+	cwd = getcwd(NULL, 0);
+	edit_or_add_env_line("PWD=", cwd, all);
+	edit_or_add_env_line("SHLVL=", "1", all);
+	free(cwd);
+}
+
 int				main(int argc, char **argv, char **envp)
 {	
 	t_all		all;
@@ -149,6 +159,7 @@ int				main(int argc, char **argv, char **envp)
 		return (-1);
 	}
 	envp_saving(envp, &all);
+	pwd_init(&all);
 	if (argv[1] && ft_strncmp("-c", argv[1], 3) == 0)
 		start_checker(&all, argv[2]);
 	else

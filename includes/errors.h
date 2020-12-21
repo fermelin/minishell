@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 14:56:10 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/28 19:17:01 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/21 21:58:41 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 # define NUM_ARG_NEEDED "numeric argument required"
 # define CMD_NOT_FOUND "command not found"
 # define TOO_MANY_ARGS "too many arguments"
-// # define
-// # define
-// # define
+# define NOT_VALID_ID "not a valid identifier"
+# define IS_A_DIR "is a directory"
+# define PERM_DENIED "Permission denied"
 // # define
 // # define
 // # define

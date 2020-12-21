@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 15:09:13 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/28 15:59:02 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/21 18:20:35 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,26 @@ static	void	env_vars_sort(t_all *all, int **mass)
 	}
 }
 
+void	print_export_without_args(t_all *all, int *mass)
+{
+	size_t i;
+	size_t j;
+
+	i = 0;
+	while (i < all->env_amount - 1)
+	{
+		j = 0;
+		ft_putstr_fd("declare -x ", 1);
+		while (all->env_vars[mass[i]][j - 1] != '=' && all->env_vars[mass[i]][j])
+			j++;
+		write(1, all->env_vars[mass[i]], j);
+		write(1, "\"", 1);
+		ft_putstr_fd(all->env_vars[mass[i]] + j, 1);
+		write(1, "\"\n", 2);
+		i++;
+	}
+}
+
 static	int	export_without_args(t_all *all)
 {
 	int		*mass;
@@ -49,12 +69,7 @@ static	int	export_without_args(t_all *all)
 	}
 	env_vars_sort(all, &mass);
 	i = 0;
-	while (i < all->env_amount - 1)
-	{
-		ft_putstr_fd("declare -x ", 1);
-		ft_putendl_fd(all->env_vars[mass[i]], 1);
-		i++;
-	}
+	print_export_without_args(all, mass);
 	free(mass);
 	return (0);
 }
@@ -80,7 +95,7 @@ static	int	add_empty_line_to_env(t_all *all)
 	return (0);
 }
 
-static	int		edit_or_add_env_line(char *key, char *value, t_all *all)
+int		edit_or_add_env_line(char *key, char *value, t_all *all)
 {
 	int	line_nbr;
 
@@ -137,7 +152,7 @@ int			ft_cd(char *path, t_all *all)
 	if ((!path || !(*path) || ft_strncmp("~", path, 2) == 0) &&
 		(line_nbr = get_env_line_nbr("HOME=", all)) != -1)
 		path = all->env_vars[line_nbr] + 5;
-	if (path && chdir(path) == -1)
+	if (path && chdir(path) == -1 && (*path))
 	{
 		print_error("cd", path, strerror(errno));
 		return (1);
@@ -149,7 +164,7 @@ int			ft_cd(char *path, t_all *all)
 		edit_or_add_env_line("OLDPWD=", oldpwd + 4, all);
 	}
 	else
-		edit_or_add_env_line("OLDPWD=", cwd, all);
+		edit_or_add_env_line("OLDPWD=", "", all);
 	edit_or_add_env_line("PWD=", cwd, all);
 	free(cwd);
 	return (0);
