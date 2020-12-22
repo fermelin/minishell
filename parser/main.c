@@ -47,7 +47,7 @@ void				parser(char *str, t_all *all)
 			one_quotes = counting_quotes(str, one_quotes, two_quotes, i);
 		else if(str[i] == '\"')
 			two_quotes = counting_quotes(str, one_quotes, two_quotes, i);
-		else if ((str[i] == ';') && //|| str[i] == '|')  && //|| str[i] == '<' || str[i] == '>')
+		else if ((str[i] == ';' && (i != 0 && str[i - 1] != '\\')) && //|| str[i] == '|')  && //|| str[i] == '<' || str[i] == '>')	!!!!!!!!!Добавил экранирование точки с запятой !!!!!!!!!!
 				(one_quotes % 2 == 0 && two_quotes % 2 == 0))
 		{
 			// if (str[i] == '|')
@@ -143,6 +143,7 @@ void			pwd_init(t_all *all)		//to delete to delete to delete to delete to delete
 	cwd = getcwd(NULL, 0);
 	edit_or_add_env_line("PWD=", cwd, all);
 	edit_or_add_env_line("SHLVL=", "1", all);
+	// edit_or_add_env_line("TERM=", "xterm-256color", all);
 	free(cwd);
 }
 

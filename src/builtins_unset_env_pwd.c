@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 15:21:15 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/21 20:57:06 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/22 12:30:09 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,40 +49,37 @@ int		unset_arg_validation(char *arg, int *exit_status)
 		i++;
 	if (arg[i] == '\0' && i != 0)
 		return (0);
-	print_unset_error("unset", arg, NOT_VALID_ID);
+	print_unset_or_export_error("unset", arg, NOT_VALID_ID);
 	*exit_status = 1;
 	return (1);
 }
 
 int		ft_unset(t_all *all, char **args)
 {
-	size_t i;
 	size_t j;
 	size_t len;
 	int		exit_status;
 
-	i = 0;
 	exit_status = 0;
-	if (!args || !(*all->env_vars))
-		return (0);
-	while (args[i])
-	{
-		j = 0;
-		len = ft_strlen(args[i]);
-		if (unset_arg_validation(args[i], &exit_status) == 0)
-			while (all->env_vars[j])
-			{
-				if (all->env_vars[j][len] == '=' && !(*args[i] == '_' && len == 1)
-					&& ft_strncmp(args[i], all->env_vars[j], len) == 0)
+	if (args && (*all->env_vars))
+		while (*args)
+		{
+			j = 0;
+			len = ft_strlen(*args);
+			if (unset_arg_validation(*args, &exit_status) == 0)
+				while (all->env_vars[j])
 				{
-					if (delete_line_from_env(all, j) == -1)
-						return (1);
-					break ;
+					if (all->env_vars[j][len] == '=' && !(**args == '_' && len
+						== 1) && ft_strncmp(*args, all->env_vars[j], len) == 0)
+					{
+						if (delete_line_from_env(all, j) == -1)
+							return (1);
+						break ;
+					}
+					j++;
 				}
-				j++;
-			}
-		i++;
-	}
+			args++;
+		}
 	return (exit_status);
 }
 

@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/21 20:37:41 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/22 15:37:54 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	free_ptrs_array(char **ptr_array);
 int		exec_cmds(t_all *all, char **argv);
 int		stat_test(char **file_names);
 int		get_env_line_nbr(char *to_find, t_all *all);
-char	*find_file_in_path(char	*file_name, t_all *all);
+int		find_file_in_path(char	*file_name, char **path, t_all *all);
 void	ctrl_c_handler(int signum);
 void	error_message(char *text_error);
 void	envp_saving(char **envp, t_all *all);
@@ -118,7 +118,7 @@ int		edit_or_add_env_line(char *key, char *value, t_all *all);
 **		errors handling
 */
 void	print_error(char *command, char *argument, char *error_message);
-void	print_unset_error(char *command, char *argument, char *error_message);
+void	print_unset_or_export_error(char *command, char *argument, char *error_message);
 // /*
 // **		to delete to delete to delete to delete 
 // */

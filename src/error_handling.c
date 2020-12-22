@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/24 06:05:34 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/21 20:37:05 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/22 12:13:20 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	error_message(char *text_error)
 	ft_putendl_fd(strerror(errno), 2);
 }
 
-void	print_unset_error(char *command, char *argument, char *error_message)
+void	print_unset_or_export_error(char *command, char *argument, char *error_message)
 {
 	ft_putstr_fd(SHELL_NAME, 2);
 	ft_putstr_fd(": ", 2);

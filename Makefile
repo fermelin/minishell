@@ -6,14 +6,16 @@
 #    By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/13 17:59:32 by fermelin          #+#    #+#              #
-#    Updated: 2020/11/29 08:45:25 by fermelin         ###   ########.fr        #
+#    Updated: 2020/12/22 11:42:17 by fermelin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME = minishell
 
-SRC =	src/builtins_cd_export.c \
+SRC =	src/builtins_cd.c \
+		src/builtins_export.c \
+		src/builtins_utils.c \
 		src/builtins_unset_env_pwd.c \
 		src/execve_test.c \
 		src/error_handling.c \
