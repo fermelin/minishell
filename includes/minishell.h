@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/22 15:37:54 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/23 18:27:34 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 #include <fcntl.h>
 #include "libft.h"
 #include "errors.h"
+
+# define SHELL_NAME "minishell"
+# define MAIN_PROMPT "> \033[1;35m$\033[0m "
 
 	typedef enum e_type
 	{

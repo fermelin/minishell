@@ -6,13 +6,13 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/24 12:43:24 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/29 13:21:35 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/23 18:32:02 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	close_write_and_open_read(t_all *all)
+static	void	close_write_and_open_read(t_all *all)
 {
 	dup2(all->save1, 1);
 	if (close(all->save1) == -1)
@@ -25,7 +25,7 @@ static void	close_write_and_open_read(t_all *all)
 		print_error("close", "fildes1[0] 2", strerror(errno));
 }
 
-void	open_pipe_write_and_close_read(t_all *all)
+void			open_pipe_write_and_close_read(t_all *all)
 {
 	if (all->data->pipe == 1 && all->data->pipe_behind == 0)
 	{
@@ -52,7 +52,7 @@ void	open_pipe_write_and_close_read(t_all *all)
 	}
 }
 
-void	close_file(t_all *all)
+void			close_file(t_all *all)
 {
 	if (all->data->redir == 3)
 	{
@@ -68,7 +68,7 @@ void	close_file(t_all *all)
 	}
 }
 
-void	close_pipe_read(t_all *all)
+void			close_pipe_read(t_all *all)
 {
 	if (all->data->pipe_behind == 1)
 	{
@@ -81,16 +81,4 @@ void	close_pipe_read(t_all *all)
 		all->fildes1[0] = all->fildes2[0];
 		all->fildes1[1] = all->fildes2[1];
 	}
-	// if (all->data->red_to == 1 || all->data->doub_red_to == 1)
-	// {
-	// 	dup2(all->save1_red, 1);
-	// 	if (close(all->save1_red) == -1)
-	// 		print_error("close", "save1 while red_to", strerror(errno));
-	// }
-	// else if (all->data->red_from == 1)
-	// {
-	// 	dup2(all->save0_red, 0);
-	// 	if (close(all->save0_red) == -1)
-	// 		print_error("close", "save0 while red_from", strerror(errno));
-	// }
 }

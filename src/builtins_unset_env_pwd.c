@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 15:21:15 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/22 12:30:09 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/23 17:54:48 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@ static	int	delete_line_from_env(t_all *all, size_t arg_nbr)
 	all->env_amount--;
 	i = 0;
 	j = 0;
-	if (!(new_env_vars = (char **)malloc(sizeof(char *) * (all->env_amount + 1))))
-		return (-1);	//error handling
+	if (!(new_env_vars = (char **)malloc(sizeof(char *) *
+		(all->env_amount + 1))))
+		return (-1);
 	while (all->env_vars[i])
 	{
 		if (i != arg_nbr)
@@ -40,7 +41,7 @@ static	int	delete_line_from_env(t_all *all, size_t arg_nbr)
 	return (0);
 }
 
-int		unset_arg_validation(char *arg, int *exit_status)
+static	int	unset_arg_validation(char *arg, int *exit_status)
 {
 	size_t i;
 
@@ -54,10 +55,10 @@ int		unset_arg_validation(char *arg, int *exit_status)
 	return (1);
 }
 
-int		ft_unset(t_all *all, char **args)
+int			ft_unset(t_all *all, char **args)
 {
-	size_t j;
-	size_t len;
+	size_t	j;
+	size_t	len;
 	int		exit_status;
 
 	exit_status = 0;
@@ -83,11 +84,17 @@ int		ft_unset(t_all *all, char **args)
 	return (exit_status);
 }
 
-int		ft_env(t_all *all)
+int			ft_env(t_all *all)
 {
 	size_t i;
 
 	i = 0;
+	if (all->data->args[1])
+	{
+		ft_putendl_fd(
+			"\033[1;31menv should not take any arguments\033[0m", 1);
+		return (1);
+	}
 	while (all->env_vars[i])
 		ft_putendl_fd(all->env_vars[i++], 1);
 	return (0);

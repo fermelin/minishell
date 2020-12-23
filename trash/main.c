@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:26:13 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/26 06:06:40 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/23 10:28:49 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int		main(int argc, char **argv, char **envp)
 		return (-1);
 	}
 	envp_saving(envp, &all);
-	ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
+	ft_putstr_fd(MAIN_PROMPT, 1);
 	parser(&all);
 	return (0);
 }

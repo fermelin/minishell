@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 11:34:56 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/22 14:38:22 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/23 18:55:08 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ static	void	env_vars_sort(t_all *all, int **mass)
 	while (i < (int)all->env_amount - 2)
 	{
 		len = ft_strlen(all->env_vars[(*mass)[i]]) + 1;
-		if (ft_strncmp(all->env_vars[(*mass)[i]], all->env_vars[(*mass)[i + 1]], len) > 0)
+		if (ft_strncmp(all->env_vars[(*mass)[i]],
+			all->env_vars[(*mass)[i + 1]], len) > 0)
 		{
 			tmp = (*mass)[i + 1];
 			(*mass)[i + 1] = (*mass)[i];
@@ -33,23 +34,15 @@ static	void	env_vars_sort(t_all *all, int **mass)
 	}
 }
 
-// void	shlvl_env_var_edit(t_all *all, char *arg)
-// {
-// 	int	arg_value;
-
-// 	arg_value = ft_atoi(arg);
-
-// }
-
-
-int		export_arg_validation(char *arg, int *exit_status)
+static	int		export_arg_validation(char *arg, int *exit_status)
 {
 	size_t i;
 
 	i = 0;
 	while (arg[i] && arg[i] != '=')
 	{
-		if (ft_isalpha(arg[i]) || (ft_isdigit(arg[i]) && i != 0) || arg[i] == '_' )
+		if (ft_isalpha(arg[i]) || (ft_isdigit(arg[i]) && i != 0) ||
+			arg[i] == '_')
 			i++;
 		else
 			break ;
@@ -61,16 +54,14 @@ int		export_arg_validation(char *arg, int *exit_status)
 	return (1);
 }
 
-int		is_escape_symbol(char c)
+static	int		is_escape_symbol(char c)
 {
 	if (c == '\\' || c == '\"' || c == '$')
 		return (1);
 	return (0);
 }
 
-// void	print_export_arg_value(char *arg)
-
-void	print_export_without_args(t_all *all, int *mass)
+void			print_export_without_args(t_all *all, int *mass)
 {
 	size_t i;
 	size_t j;
@@ -103,7 +94,7 @@ void	print_export_without_args(t_all *all, int *mass)
 	}
 }
 
-static	int	export_without_args(t_all *all)
+static	int		export_without_args(t_all *all)
 {
 	int		*mass;
 	size_t	i;
@@ -123,7 +114,7 @@ static	int	export_without_args(t_all *all)
 	return (0);
 }
 
-int		ft_export(t_all *all, char **args)	//to handle bad symbols
+int			ft_export(t_all *all, char **args)	//to handle bad symbols
 {
 	char	*equal_sign_ptr;
 	int		shift;

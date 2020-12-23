@@ -6,21 +6,20 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 14:56:10 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/22 16:30:51 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/23 18:11:45 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ERRORS_H
 # define ERRORS_H
 
-# define SHELL_NAME "minishell"
-# define NUM_ARG_NEEDED "numeric argument required"
+# define NUM_ARG_REQUIRED "numeric argument required"
 # define CMD_NOT_FOUND "command not found"
 # define TOO_MANY_ARGS "too many arguments"
 # define NOT_VALID_ID "not a valid identifier"
 # define IS_A_DIR "is a directory"
 # define PERM_DENIED "Permission denied"
-// # define
+# define NO_SUCH_FILE "No such file or directory"
 // # define
 // # define
 // # define

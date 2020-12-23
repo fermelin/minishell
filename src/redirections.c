@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/20 10:35:07 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/28 19:25:03 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/23 18:28:57 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,9 @@ void	output_to_file(t_all *all, char *file_name)
 			return ;
 	}
 	all->save1_red = dup(1);
-
 	dup2(fd, 1);
 	if (close(fd) == -1)
 		print_error("close", "fd", strerror(errno));
-
 }
 
 void	input_from_file(t_all *all, char *file_name)

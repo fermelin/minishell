@@ -6,71 +6,58 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 13:06:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/28 17:04:08 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/23 18:36:59 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// int			exit_arg_validation(char *arg)
-// {
-// 	int i;
-// 	int sign;
+static	void	exit_arg_validation(char *args, int *exit_status)
+{
+	int i;
 
-// 	i = 0;
-// 	sign = 1;
-// 		while (ft_isspace((*args)[i]))
-// 			i++;
-// 		if ((*args)[i] == '+' || (*args)[i] == '-')
-// 		{
-// 			sign = ((*args)[i] == '+') ? 1 : -1;
-// 			i++;
-// 		}
-// 		while (ft_isdigit((*args)[i]))
-// 			i++;
+	i = 0;
+	while (ft_isspace(args[i]))
+		i++;
+	if (args[i] == '+' || args[i] == '-')
+		i++;
+	if ((*exit_status = ft_atoi(args)) == 0)
+	{
+		if (args[i] == '0')
+			exit(0);
+		print_error("exit", args, NUM_ARG_REQUIRED);
+		exit(255);
+	}
+	while (ft_isdigit(args[i]))
+		i++;
+	while (args[i] == ' ' || args[i] == '\t')
+		i++;
+	if (args[i] != '\0')
+	{
+		print_error("exit", args, NUM_ARG_REQUIRED);
+		exit(255);
+	}
+}
 
-// }
-
-int			ft_exit(char **args)
+int				ft_exit(char **args)
 {
 	int exit_status;
-	int i;
 
 	if (*args)
 	{
 		if (*(args + 1))
 		{
 			print_error("exit", "", TOO_MANY_ARGS);
-			exit (1);
+			exit(1);
 		}
-		i = 0;
-		while (ft_isspace((*args)[i]))
-			i++;
-		if ((*args)[i] == '+' || (*args)[i] == '-')
-			i++;
-		if ((exit_status = ft_atoi(*args)) == 0)
-		{
-			if ((*args)[i] == '0')
-				exit (0);
-			print_error("exit", *args, NUM_ARG_NEEDED);
-			exit (255);
-		}
-		while (ft_isdigit((*args)[i]))
-			i++;
-		while (ft_isspace((*args)[i]))
-			i++;
-		if ((*args)[i] != '\0')
-		{
-			print_error("exit", *args, NUM_ARG_NEEDED);
-			exit (255);
-		}
+		exit_arg_validation(*args, &exit_status);
 	}
 	else
 		exit(0);
 	exit(exit_status);
 }
 
-static int		is_string_consists_only_one_char(char *str, char c)
+static	int		is_string_consists_only_one_char(char *str, char c)
 {
 	size_t i;
 
@@ -82,8 +69,7 @@ static int		is_string_consists_only_one_char(char *str, char c)
 	return (0);
 }
 
-
-int		ft_echo(char **args)
+int				ft_echo(char **args)
 {
 	size_t	i;
 	int		n_flag;

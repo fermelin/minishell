@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 18:48:33 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/21 15:55:09 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/23 18:35:21 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int		choose_command(t_all *all)
 {
-
 	if (ft_strncmp("cd", all->data->args[0], 3) == 0)
 		all->exit_status = ft_cd(all->data->args[1], all);
 	else if (ft_strncmp("pwd", all->data->args[0], 4) == 0)
@@ -49,7 +48,6 @@ int		what_redirection(char *sign)
 	return (0);
 }
 
-
 void	setting_pipes_and_redirections(t_all *all)
 {
 	size_t i;
@@ -59,7 +57,8 @@ void	setting_pipes_and_redirections(t_all *all)
 	if (all->data->redir_array)
 		while (all->data->redir_array[i])
 		{
-			if ((all->data->redir = what_redirection(all->data->redir_array[i])))
+			if ((all->data->redir =
+				what_redirection(all->data->redir_array[i])))
 			{
 				i++;
 				if (all->data->redir == 3)
@@ -75,14 +74,8 @@ void	setting_pipes_and_redirections(t_all *all)
 
 int		execution(t_all *all)
 {
-	
 	while (all->data)			//I could use automatic variable and not save the head
 	{
-		// open_pipe_write_and_close_read(all);
-		// if (all->data->red_to == 1 || all->data->doub_red_to == 1)
-		// 	output_to_file(all);
-		// else if (all->data->red_from == 1)
-		// 	input_from_file(all);
 		if (all->data->redir || all->data->pipe || all->data->pipe_behind)
 			setting_pipes_and_redirections(all);
 		if (all->data->args && *all->data->args && choose_command(all) == 0)

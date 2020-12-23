@@ -102,7 +102,8 @@ char			*get_line(void)
 
 void	start_checker(t_all *all, char *argv)
 {
-	parser(argv, all);
+	if (argv)
+		parser(argv, all);
 	if (execution(all) == 0)
 		;
 	p_lstclear(&(all->head));
@@ -113,7 +114,7 @@ void			start_loop(t_all *all)
 	char 		*line;
 
 	line = NULL;
-	ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
+	ft_putstr_fd(MAIN_PROMPT, 1);
 	while (1)
 	{
 		if ((line = get_line()) == NULL)
@@ -126,7 +127,7 @@ void			start_loop(t_all *all)
 		if (execution(all) == 0)				//uncomment
 			exit(0);								//uncomment
 		if (all->child_killed != 1)
-			ft_putstr_fd("> \033[1;35m$\033[0m ", 1);
+			ft_putstr_fd(MAIN_PROMPT, 1);
 		all->child_killed = 0;
 		free (line);
 		line = NULL;

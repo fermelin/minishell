@@ -6,50 +6,39 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/22 17:46:28 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/23 18:25:06 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	print_file_exec_error(char *path)
-// {
-	
-// }
-
-int		is_exec_file_correct(t_all *all, char **path, char **argv)
+static	int	is_exec_file_correct(t_all *all, char **path, char **argv)
 {
 	struct stat buf;
 
-	if ((ft_strncmp("./", argv[0], 2)) == 0 ||
-		(ft_strncmp("../", argv[0], 3)) == 0 || (ft_strncmp("/", argv[0], 1)) == 0)
+	if ((ft_strncmp("./", argv[0], 2)) == 0 || (ft_strncmp("../", argv[0], 3))
+		== 0 || (ft_strncmp("/", argv[0], 1)) == 0)
 		*path = argv[0];
-	else if (find_file_in_path(argv[0], path, all) == 1)
-		;
-	// else
-	// {
-	// 	print_error(argv[0], "", CMD_NOT_FOUND);
-	// 	exit (127);
-	// }
+	else
+		find_file_in_path(argv[0], path, all);
 	if (stat(*path, &buf) == 0)
 	{
 		if ((buf.st_mode & S_IFDIR) == S_IFDIR)
 			print_error(*path, "", IS_A_DIR);
-		else if ((buf.st_mode & S_IXUSR) != S_IXUSR)
-		{
-			errno = EACCES;
-			print_error(*path, "", strerror(errno));
-		}
+		else if ((buf.st_mode & S_IXUSR) != S_IXUSR ||
+			(buf.st_mode & S_IRUSR) != S_IRUSR)
+			print_error(*path, "", strerror(EACCES));
 		else
 			return (1);
 		exit (126);
 	}
+	if (ft_strncmp(*path, argv[0], ft_strlen(argv[0])) == 0)
+		print_error(argv[0], "", NO_SUCH_FILE);
 	else
-	{
 		print_error(argv[0], "", CMD_NOT_FOUND);
-		exit (127);
-	}
+	exit (127);
 }
+
 int		child_process(t_all *all, char **argv)
 {
 	char	*path;
@@ -60,45 +49,9 @@ int		child_process(t_all *all, char **argv)
 	signal(SIGQUIT, SIG_DFL);
 	execve_ret = 0;
 	error_handling_fd = 0;
-		// if ((ft_strncmp("./", argv[0], 2)) == 0 ||
-		// 	(ft_strncmp("../", argv[0], 3)) == 0 || (ft_strncmp("/", argv[0], 1)) == 0)
-		// {
-		// 	execve_ret = execve(argv[0], argv, all->env_vars);
-		// 	path = argv[0];
-		// }
-		// else if (find_file_in_path(argv[0], &path, all) == 1)
-		// 	execve_ret = execve(path, argv, all->env_vars);
-		// else
-		// {
-		// 	print_error(argv[0], "", CMD_NOT_FOUND);
-		// 	exit (127);
-		// }
-
-		// print_file_exec_error(path);
-		
-		// printf("%d\n", errno);
 	if (is_exec_file_correct(all, &path, argv) == 1)
 		execve_ret = execve(path, argv, all->env_vars);
-	// else
-	// {
-	// 	print_error(argv[0], "", CMD_NOT_FOUND);
-	// 	exit (127);
-	// }
 	exit (0);
-		// if ((error_handling_fd = open(argv[0], O_RDWR)) == -1)
-		// 	;
-	// printf("%d\n", execve_ret);
-	// if (errno == 21)
-	// 	print_error(argv[0], "", IS_A_DIR);
-	// else
-	// 	print_error(argv[0], "", strerror(errno));
-	// 	// free(path);
-	// 	exit (126);
-	// printf("%d\n", errno);
-		// exit (0);
-
-	// print_error(argv[0], "", CMD_NOT_FOUND);
-	// exit (127);
 }
 
 int		exec_cmds(t_all *all, char **argv)
@@ -136,6 +89,8 @@ int		stat_test(char **file_names)		//to delete to delete to delete to delete to 
 			printf("file %d exists!!!\n", i);
 			if ((buf.st_mode & S_IFDIR) == S_IFDIR)
 				printf("this is a directory!!!\n");
+			else if ((buf.st_mode & S_IXUSR) == S_IXUSR)
+				printf("This file has exec rights!!!\n");
 		}
 		i++;
 	}
