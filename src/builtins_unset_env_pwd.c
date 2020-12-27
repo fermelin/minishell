@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 15:21:15 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/23 17:54:48 by fermelin         ###   ########.fr       */
+/*   Updated: 2020/12/26 19:16:15 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int			ft_env(t_all *all)
 	if (all->data->args[1])
 	{
 		ft_putendl_fd(
-			"\033[1;31menv should not take any arguments\033[0m", 1);
+			"\033[1;31menv should not take any arguments\033[0m", 2);
 		return (1);
 	}
 	while (all->env_vars[i])

@@ -114,7 +114,7 @@ void			start_loop(t_all *all)
 	char 		*line;
 
 	line = NULL;
-	ft_putstr_fd(MAIN_PROMPT, 1);
+	ft_putstr_fd(MAIN_PROMPT, 2);
 	while (1)
 	{
 		if ((line = get_line()) == NULL)
@@ -127,7 +127,7 @@ void			start_loop(t_all *all)
 		if (execution(all) == 0)				//uncomment
 			exit(0);								//uncomment
 		if (all->child_killed != 1)
-			ft_putstr_fd(MAIN_PROMPT, 1);
+			ft_putstr_fd(MAIN_PROMPT, 2);
 		all->child_killed = 0;
 		free (line);
 		line = NULL;
