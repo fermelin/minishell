@@ -6,13 +6,20 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 13:06:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/23 18:36:59 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/04 19:26:10 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static	void	exit_arg_validation(char *args, int *exit_status)
+static	void	print_exit_or_not(int whence_the_command)
+{
+	if (whence_the_command == 0)
+		ft_putendl_fd("exit", 2);
+}
+
+static	void	exit_arg_validation(char *args, int *exit_status,
+	int whence_the_command)
 {
 	int i;
 
@@ -23,10 +30,10 @@ static	void	exit_arg_validation(char *args, int *exit_status)
 		i++;
 	if ((*exit_status = ft_atoi(args)) == 0)
 	{
+		print_exit_or_not(whence_the_command);
 		if (args[i] == '0')
 			exit(0);
-		print_error("exit", args, NUM_ARG_REQUIRED);
-		exit(255);
+		print_error_and_maybe_exit("exit", args, NUM_ARG_REQUIRED, 255);
 	}
 	while (ft_isdigit(args[i]))
 		i++;
@@ -34,12 +41,12 @@ static	void	exit_arg_validation(char *args, int *exit_status)
 		i++;
 	if (args[i] != '\0')
 	{
-		print_error("exit", args, NUM_ARG_REQUIRED);
-		exit(255);
+		print_exit_or_not(whence_the_command);
+		print_error_and_maybe_exit("exit", args, NUM_ARG_REQUIRED, 255);
 	}
 }
 
-int				ft_exit(char **args)
+int				ft_exit(char **args, int whence_the_command)
 {
 	int exit_status;
 
@@ -47,13 +54,15 @@ int				ft_exit(char **args)
 	{
 		if (*(args + 1))
 		{
-			print_error("exit", "", TOO_MANY_ARGS);
-			exit(1);
+			print_exit_or_not(whence_the_command);
+			print_error_and_maybe_exit("exit", "", TOO_MANY_ARGS, -1);
+			return (1);
 		}
-		exit_arg_validation(*args, &exit_status);
+		exit_arg_validation(*args, &exit_status, whence_the_command);
 	}
 	else
-		exit(0);
+		exit_status = 0;
+	print_exit_or_not(whence_the_command);
 	exit(exit_status);
 }
 

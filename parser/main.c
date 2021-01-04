@@ -75,10 +75,11 @@ void				parser(char *str, t_all *all)
 
 char			*get_line(void)
 {
-	static char *line2;
-	char		*line;
-	int			ret;
+	char	*line2;
+	char	*line;
+	int		ret;
 
+	line = NULL;
 	line2 = NULL;
 	while ((ret = get_next_line(0, &line)) != 1)
 	{
@@ -89,14 +90,13 @@ char			*get_line(void)
 		}
 		if ((!line || !(*line)) && (!line2 || !(*line2)))
 			return (NULL);
-		else if (*line)
-		{
-			line2 = ft_strjoin(line2, line);
-			line = NULL;
-		}
+		if (*line)
+			line2 = ft_strjoin_free(line2, line);
+		free(line);
+		line = NULL;
 	}
 	if (line2 && (*line2))
-		line = ft_strjoin(line2, line);
+		line = ft_strjoin_free(line2, line);
 	return (line);
 }
 
@@ -104,8 +104,8 @@ void	start_checker(t_all *all, char *argv)
 {
 	if (argv)
 		parser(argv, all);
-	if (execution(all) == 0)
-		;
+	all->whence_the_command = 1;
+	execution(all);
 	p_lstclear(&(all->head));
 }
 
@@ -118,12 +118,12 @@ void			start_loop(t_all *all)
 	while (1)
 	{
 		if ((line = get_line()) == NULL)
-			exit(0);						//print exit before it
-
-		if (line && (*line))
 		{
-			parser(line, all);
+			ft_putendl_fd("exit", 2);
+			exit(0);						//print exit before it
 		}
+		if (line && (*line))
+			parser(line, all);
 		if (execution(all) == 0)				//uncomment
 			exit(0);								//uncomment
 		if (all->child_killed != 1)
@@ -144,7 +144,6 @@ void			pwd_init(t_all *all)		//to delete to delete to delete to delete to delete
 	cwd = getcwd(NULL, 0);
 	edit_or_add_env_line("PWD=", cwd, all);
 	edit_or_add_env_line("SHLVL=", "1", all);
-	// edit_or_add_env_line("TERM=", "xterm-256color", all);
 	free(cwd);
 }
 
@@ -153,6 +152,7 @@ int				main(int argc, char **argv, char **envp)
 	t_all		all;
 
 	all.exit_status = 0;
+	all.whence_the_command = 0;
 	signal(SIGINT, ctrl_c_handler);
 	signal(SIGQUIT, ctrl_c_handler);
 	if (!argc || !argv)

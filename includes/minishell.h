@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/23 18:27:34 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/04 19:29:01 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef	struct		s_all
 	size_t			env_amount;
 	int				child_killed;
 	int				exit_status;
+	int				whence_the_command;
 	int				fildes1[2];
 	int				fildes2[2];
 	int				save0;
@@ -75,25 +76,6 @@ typedef	struct		s_all
 }					t_all;
 
 
-
-
-
-
-
-
-// to delete  to delete  to delete  to delete  to delete  to delete  to delete  to delete  to delete  to delete 
-// typedef struct		s_data 
-// {
-// 	int				token_type[4];
-// 	char			*args;
-// 	int				pipe;
-// 	int				pipe_behind;
-
-
-
-// }					t_data;
-// to delete  to delete  to delete  to delete  to delete  to delete  to delete  to delete  to delete  to delete 
-
 /*
 **		builtins
 */
@@ -103,7 +85,8 @@ int		ft_env(t_all *all);
 int		ft_unset(t_all *all, char **args);
 int		ft_export(t_all *all, char **args);
 int		ft_echo(char **args);
-int		ft_exit(char **args);
+int		ft_exit(char **args, int whence_the_command);
+
 /*
 **		utils
 */
@@ -117,27 +100,20 @@ void	error_message(char *text_error);
 void	envp_saving(char **envp, t_all *all);
 char	*get_env_str(char *key, t_all *all);
 int		edit_or_add_env_line(char *key, char *value, t_all *all);
+
 /*
 **		errors handling
 */
 void	print_error(char *command, char *argument, char *error_message);
 void	print_unset_or_export_error(char *command, char *argument, char *error_message);
-// /*
-// **		to delete to delete to delete to delete 
-// */
-// t_data	*p_lstnew(void);
-// void	p_lstadd_back(t_data **lst, t_data *new);
-// void	p_lstadd_front(t_data **lst, t_data *new);
-// void	p_lstclear(t_data **lst);
-// void	p_lstdelone(t_data *lst);
-// t_data	*p_lstlast(t_data *lst);
-// int		p_lstsize(t_data *lst);
+void	print_error_and_maybe_exit(char *command, char *argument, char *error_message, int exit_status);
 
 /*
 **		to delete to delete to delete to delete 
 */
 int		execution(t_all *all);
 int		choose_command(t_all *all);
+
 /*
 **		redirections & pipes
 */
@@ -146,22 +122,10 @@ void	input_from_file(t_all *all, char *file_name);
 void	open_pipe_write_and_close_read(t_all *all);
 void	close_file_or_pipe_read(t_all *all);
 int		what_redirection(char *sign);
+
 /*
 **		parser
 */
-// void 	filling_struct(t_all *all, t_list *new, int len);
-// void	line_search(char *line, t_all *all, int start, int end);
-// t_data	*p_lstnew(void);
-// void	p_lstadd_back(t_data **lst, t_data *new);
-// void	p_lstclear(t_data **lst);
-// t_data	*p_lstlast(t_data *lst);
-// int		p_lstsize(t_data *lst);
-// void	p_lstdelone(t_data *lst, void (*del)(void*));
-// void	error_malloc();
-// int        check_dollar(t_all *all, char **word, int i);
-// char		*search_variable(t_all *all, char **word);
-// int delete_symbol(char **str, int i, char c);
-// int			counting_quotes(char *str, int one_quotes, int two_quotes, int i);
 void	close_file(t_all *all);
 void	close_pipe_read(t_all *all);
 

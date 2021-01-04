@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 11:37:00 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/26 19:15:52 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/04 14:01:34 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int			edit_or_add_env_line(char *key, char *value, t_all *all)
 		else
 		{
 			if (add_empty_line_to_env(all) == -1)
-				return (1);
+				return (-1);
 			all->env_vars[all->env_amount - 2] = ft_strjoin(key, value);
 		}
 	}
