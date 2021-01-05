@@ -69,6 +69,7 @@ void				parser(char *str, t_all *all)
 			// all->data = all->data->next;
 		}
 	}
+	all->tmp = all->data;
 	line_search(str, all, start, i - 1); // когда дошли до конца строки, либо если разделителя не было
 	all->data = all->tmp;
 }
