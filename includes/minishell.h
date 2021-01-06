@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/04 19:29:01 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/05 13:35:13 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int		ft_env(t_all *all);
 int		ft_unset(t_all *all, char **args);
 int		ft_export(t_all *all, char **args);
 int		ft_echo(char **args);
-int		ft_exit(char **args, int whence_the_command);
+int		ft_exit(char **args, t_all *all);
 
 /*
 **		utils

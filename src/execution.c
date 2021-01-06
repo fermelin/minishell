@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 18:48:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/04 19:43:10 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/05 13:35:26 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		choose_command(t_all *all)
 	else if (ft_strncmp("q", all->data->args[0], 2) == 0)			//to delete to delete to delete to delete to delete 
 		exit (0);
 	else if (ft_strncmp("exit", all->data->args[0], 5) == 0)
-		all->exit_status = ft_exit(all->data->args + 1, all->whence_the_command);
+		all->exit_status = ft_exit(all->data->args + 1, all);
 	else if (all->data->args && *all->data->args)
 		all->exit_status = exec_cmds(all, all->data->args);
 	return (1);

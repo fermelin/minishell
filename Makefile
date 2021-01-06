@@ -6,7 +6,7 @@
 #    By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/13 17:59:32 by fermelin          #+#    #+#              #
-#    Updated: 2020/12/22 11:42:17 by fermelin         ###   ########.fr        #
+#    Updated: 2021/01/05 17:47:23 by fermelin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ LIBFT = $(LIBFTDIR)libft.a
 
 CC = gcc
 
-CFLAGS = -g -Wall -Werror -Wextra -I./libft -I./includes 
+CFLAGS = -g -Wall -Werror -Wextra -I./libft -I./includes #-fsanitize=address
 
 # ifdef ANTON
 # CFLAGS += -D ANTON=1

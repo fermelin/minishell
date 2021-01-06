@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 13:06:00 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/04 19:26:10 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/05 13:34:47 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static	void	exit_arg_validation(char *args, int *exit_status,
 	}
 }
 
-int				ft_exit(char **args, int whence_the_command)
+int				ft_exit(char **args, t_all *all)
 {
 	int exit_status;
 
@@ -54,15 +54,15 @@ int				ft_exit(char **args, int whence_the_command)
 	{
 		if (*(args + 1))
 		{
-			print_exit_or_not(whence_the_command);
+			print_exit_or_not(all->whence_the_command);
 			print_error_and_maybe_exit("exit", "", TOO_MANY_ARGS, -1);
 			return (1);
 		}
-		exit_arg_validation(*args, &exit_status, whence_the_command);
+		exit_arg_validation(*args, &exit_status, all->whence_the_command);
 	}
 	else
-		exit_status = 0;
-	print_exit_or_not(whence_the_command);
+		exit_status = all->exit_status;
+	print_exit_or_not(all->whence_the_command);
 	exit(exit_status);
 }
 
