@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 15:09:13 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/04 14:05:17 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/07 15:31:15 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,21 @@ int			ft_cd(char *path, t_all *all)
 	char	*cwd;
 	char	*oldpwd;
 
-	if ((!path || !(*path) || ft_strncmp("~", path, 2) == 0) &&
-		(line_nbr = get_env_line_nbr("HOME=", all)) != -1)
-		path = all->env_vars[line_nbr] + 5;
-	if (path && chdir(path) == -1 && (*path))
+	if (!path || !(*path) || ft_strncmp("~", path, 2) == 0)
 	{
-		print_error("cd", path, strerror(errno));
-		return (1);
+		if ((line_nbr = get_env_line_nbr("HOME=", all)) != -1)
+			path = all->env_vars[line_nbr] + 5;
+		else if (!path)
+			return (print_error("cd", "", "HOME not set"));
 	}
+	if (path && chdir(path) == -1 && (*path))
+		return (print_error("cd", path, strerror(errno)));
 	cwd = getcwd(NULL, 0);
 	if ((line_nbr = get_env_line_nbr("PWD=", all)) != -1)
-	{
-		oldpwd = all->env_vars[line_nbr];
-		edit_or_add_env_line("OLDPWD=", oldpwd + 4, all);
-	}
+		oldpwd = all->env_vars[line_nbr] + 4;
 	else
-		edit_or_add_env_line("OLDPWD=", "", all);
+		oldpwd = NULL;
+	edit_or_add_env_line("OLDPWD=", oldpwd, all);
 	edit_or_add_env_line("PWD=", cwd, all);
 	free(cwd);
 	return (0);

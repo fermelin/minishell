@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 11:34:56 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/23 18:55:08 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/07 14:43:22 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static	int		export_arg_validation(char *arg, int *exit_status)
 	}
 	if ((arg[i] == '\0' || arg[i] == '=') && i != 0)
 		return (0);
-	print_unset_or_export_error("export", arg, NOT_VALID_ID);
+	print_error_with_arg("export", arg, NOT_VALID_ID);
 	*exit_status = 1;
 	return (1);
 }

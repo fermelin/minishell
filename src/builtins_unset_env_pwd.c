@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 15:21:15 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/26 19:16:15 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/07 14:43:19 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static	int	unset_arg_validation(char *arg, int *exit_status)
 		i++;
 	if (arg[i] == '\0' && i != 0)
 		return (0);
-	print_unset_or_export_error("unset", arg, NOT_VALID_ID);
+	print_error_with_arg("unset", arg, NOT_VALID_ID);
 	*exit_status = 1;
 	return (1);
 }

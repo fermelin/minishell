@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/23 18:25:06 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/07 12:32:14 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,12 @@ static	int	is_exec_file_correct(t_all *all, char **path, char **argv)
 	if (stat(*path, &buf) == 0)
 	{
 		if ((buf.st_mode & S_IFDIR) == S_IFDIR)
-			print_error(*path, "", IS_A_DIR);
+			print_error_and_exit(*path, "", IS_A_DIR, 126);
 		else if ((buf.st_mode & S_IXUSR) != S_IXUSR ||
 			(buf.st_mode & S_IRUSR) != S_IRUSR)
-			print_error(*path, "", strerror(EACCES));
+			print_error_and_exit(*path, "", strerror(EACCES), 126);
 		else
 			return (1);
-		exit (126);
 	}
 	if (ft_strncmp(*path, argv[0], ft_strlen(argv[0])) == 0)
 		print_error(argv[0], "", NO_SUCH_FILE);

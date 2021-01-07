@@ -20,13 +20,6 @@ int			counting_quotes(char *str, int one_quotes, int two_quotes, int i)
 	return (0);
 }
 
-void	temporary_loop(t_all *all)
-{
-	if (execution(all) == 0)
-		exit (0);
-
-}
-
 void				parser(char *str, t_all *all)
 {
 	int			i;
@@ -50,8 +43,6 @@ void				parser(char *str, t_all *all)
 		else if ((str[i] == ';' && (i != 0 && str[i - 1] != '\\')) && //|| str[i] == '|')  && //|| str[i] == '<' || str[i] == '>')	!!!!!!!!!Добавил экранирование точки с запятой !!!!!!!!!!
 				(one_quotes % 2 == 0 && two_quotes % 2 == 0))
 		{
-			// if (str[i] == '|')
-			// 	all->data->pipe = 1; // установка флагов под разделители
 			all->tmp = all->data;
 			line_search(str, all, start, i - 1); // обработка одной линии (строки) до разделителя
 			all->data = all->tmp;
@@ -64,9 +55,6 @@ void				parser(char *str, t_all *all)
 			p_lstclear(&(all->head));
 			all->head = p_lstnew();
 			all->data = all->head;
-			// // if (all->data->pipe)
-			// // 	all->data->next->pipe_behind = 1;
-			// all->data = all->data->next;
 		}
 	}
 	all->tmp = all->data;
@@ -138,13 +126,24 @@ void			start_loop(t_all *all)
 	ft_putendl_fd("exit", 1);
 }
 
-void			pwd_init(t_all *all)		//to delete to delete to delete to delete to delete 
+void			env_init(t_all *all)		//to delete to delete to delete to delete to delete 
 {
-	char *cwd;
+	char	*cwd;
+	char	*shlvl_str;
+	int		shlvl_int;
 
 	cwd = getcwd(NULL, 0);
 	edit_or_add_env_line("PWD=", cwd, all);
-	edit_or_add_env_line("SHLVL=", "1", all);
+	if (!(shlvl_str = get_env_str("SHLVL", all)))
+		edit_or_add_env_line("SHLVL=", "1", all);
+	else
+	{
+		shlvl_int = ft_atoi(shlvl_str) + 1;
+		free(shlvl_str);
+		shlvl_str = ft_itoa(shlvl_int);
+		edit_or_add_env_line("SHLVL=", shlvl_str, all);
+		free(shlvl_str);
+	}
 	free(cwd);
 }
 
@@ -162,7 +161,7 @@ int				main(int argc, char **argv, char **envp)
 		return (-1);
 	}
 	envp_saving(envp, &all);
-	pwd_init(&all);
+	env_init(&all);
 	if (argv[1] && ft_strncmp("-c", argv[1], 3) == 0)
 		start_checker(&all, argv[2]);
 	else

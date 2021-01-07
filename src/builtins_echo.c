@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 13:06:00 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/05 13:34:47 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/07 12:28:57 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static	void	exit_arg_validation(char *args, int *exit_status,
 		print_exit_or_not(whence_the_command);
 		if (args[i] == '0')
 			exit(0);
-		print_error_and_maybe_exit("exit", args, NUM_ARG_REQUIRED, 255);
+		print_error_and_exit("exit", args, NUM_ARG_REQUIRED, 255);
 	}
 	while (ft_isdigit(args[i]))
 		i++;
@@ -42,7 +42,7 @@ static	void	exit_arg_validation(char *args, int *exit_status,
 	if (args[i] != '\0')
 	{
 		print_exit_or_not(whence_the_command);
-		print_error_and_maybe_exit("exit", args, NUM_ARG_REQUIRED, 255);
+		print_error_and_exit("exit", args, NUM_ARG_REQUIRED, 255);
 	}
 }
 
@@ -55,7 +55,7 @@ int				ft_exit(char **args, t_all *all)
 		if (*(args + 1))
 		{
 			print_exit_or_not(all->whence_the_command);
-			print_error_and_maybe_exit("exit", "", TOO_MANY_ARGS, -1);
+			print_error("exit", "", TOO_MANY_ARGS);
 			return (1);
 		}
 		exit_arg_validation(*args, &exit_status, all->whence_the_command);
