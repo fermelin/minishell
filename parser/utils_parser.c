@@ -114,7 +114,30 @@ void filling_struct(t_all *all, t_list *new, int len)
 		new_copy = new_copy->next;
 		i++;
 	}
-	choice = split_args_and_redirects(array, all);
-	free(choice);
+	i = 0;
+	while (array[i] && i != -1)
+	{
+		if ((ft_strncmp(array[i], ">", 3) == 0 || ft_strncmp(array[i], "<", 3) == 0 ||
+			ft_strncmp(array[i], ">>", 4) == 0) && (array[i + 1] &&
+			ft_strncmp(array[i + 1], "|", 3) == 0))
+		{
+			print_error_with_arg("syntax error near unexpected token", "|", NULL);
+			all->exit_status = 2;
+			i = -2;
+		}
+		if ((ft_strncmp(array[i], ">", 3) == 0 || ft_strncmp(array[i], "<", 3) == 0 ||
+			ft_strncmp(array[i], ">>", 4) == 0) && array[i + 1] == NULL)
+		{
+			print_error_with_arg("syntax error near unexpected token", "newline", NULL);
+			all->exit_status = 2;
+			i = -2;
+		}
+		i++;
+	}
+	if (i != -1)
+	{
+		choice = split_args_and_redirects(array, all);
+		free(choice);
+	}
 	free(array);
 }

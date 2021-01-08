@@ -1,4 +1,15 @@
-#include "libft.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/01/07 15:39:33 by fermelin          #+#    #+#             */
+/*   Updated: 2021/01/08 17:31:56 by fermelin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int			counting_quotes(char *str, int one_quotes, int two_quotes, int i)
@@ -19,6 +30,19 @@ int			counting_quotes(char *str, int one_quotes, int two_quotes, int i)
 	}
 	return (0);
 }
+
+// void				free_struct(t_all *all)
+// {
+// 	t_data *tmp;
+
+// 	tmp = all->head;
+// 	while (tmp)
+// 	{
+// 		free_ptrs_array(tmp->args);
+// 		free_ptrs_array(tmp->redir_array);
+// 		tmp = tmp->next;
+// 	}
+// }
 
 void				parser(char *str, t_all *all)
 {
@@ -49,6 +73,7 @@ void				parser(char *str, t_all *all)
 			if (execution(all) == 0)
 				exit (0);
 			all->data = all->tmp;
+			// free_struct(all);
 			if (str[i] == '>' && str[i + 1] == '>')
 				i++;
 			start = i + 1;
@@ -111,6 +136,7 @@ void			start_loop(t_all *all)
 			ft_putendl_fd("exit", 2);
 			exit(0);						//print exit before it
 		}
+		check_error(&line, all);
 		if (line && (*line))
 			parser(line, all);
 		if (execution(all) == 0)				//uncomment
@@ -120,6 +146,7 @@ void			start_loop(t_all *all)
 		all->child_killed = 0;
 		free (line);
 		line = NULL;
+		// free_struct(all);
 		p_lstclear(&(all->head));
 	}
 	free(line);
@@ -147,12 +174,18 @@ void			env_init(t_all *all)		//to delete to delete to delete to delete to delete
 	free(cwd);
 }
 
+void			struct_init(t_all *all)
+{
+	all->exit_status = 0;
+	all->whence_the_command = 0;
+	all->child_killed = 0;
+}
+
 int				main(int argc, char **argv, char **envp)
 {	
 	t_all		all;
 
-	all.exit_status = 0;
-	all.whence_the_command = 0;
+	struct_init(&all);
 	signal(SIGINT, ctrl_c_handler);
 	signal(SIGQUIT, ctrl_c_handler);
 	if (!argc || !argv)

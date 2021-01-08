@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:58:44 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/07 14:44:05 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/08 18:18:17 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int			check_dollar(t_all *all, char **word, int start, int *arr)
 	else if (!(tempory = get_env_str(((*word) + start), all)))
 		tempory = ft_strdup("");
 	free(*word);
-	(*word) = ft_calloc(arr[1] - arr[0] + ft_strlen(tempory) + 1, sizeof(char));
+	(*word) = ft_calloc(arr[1] - arr[0] + start + ft_strlen(tempory) + 1, 1);
 	len = -1;
 	while (++len < start)
 		(*word)[len] = tmp[len];
@@ -54,7 +54,8 @@ void		search_dollar(char **word, char *str, int **start, int *i)
 	while (str[(*start)[0]] && str[(*start)[0]] != '\'' &&
 		str[(*start)[0]] != '\"' && str[(*start)[0]] != ' ' &&
 		str[(*start)[0]] != '$' && str[(*start)[0]] != '\\' &&
-		str[(*start)[0]] != '=')
+		str[(*start)[0]] != '=' && str[(*start)[0]] != '|' &&
+		str[(*start)[0]] != ']')
 	{
 		if (str[num] == '$' && ((ft_isdigit(str[num + 1]) &&
 			ft_isdigit(str[num + 2])) || str[num + 1] == '?'))
@@ -85,7 +86,12 @@ char		*help_variable(t_all *all, char **word, char *str, int **start)
 			all->params.i--;
 		}
 		else if (str[(*start)[0]] == '\\')
-			dash(all, word, str, start);
+		// {
+		// 	if (str[(*start)[0] + 1] == 't')
+		// 		(*start)[0]++;
+		// 	else
+				dash(all, word, str, start);
+		// }
 		else if (str[(*start)[0]] == '\"')
 			two_quotes(all, word, str, start);
 		else if (str[(*start)[0]] == '\'')

@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/07 12:32:14 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/08 14:39:14 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static	int	is_exec_file_correct(t_all *all, char **path, char **argv)
 		*path = argv[0];
 	else
 		find_file_in_path(argv[0], path, all);
-	if (stat(*path, &buf) == 0)
+	if (*path && stat(*path, &buf) == 0)
 	{
 		if ((buf.st_mode & S_IFDIR) == S_IFDIR)
 			print_error_and_exit(*path, "", IS_A_DIR, 126);
@@ -36,8 +36,8 @@ static	int	is_exec_file_correct(t_all *all, char **path, char **argv)
 	else
 		print_error(argv[0], "", CMD_NOT_FOUND);
 	exit (127);
-}
 
+}
 int		child_process(t_all *all, char **argv)
 {
 	char	*path;
@@ -66,7 +66,10 @@ int		exec_cmds(t_all *all, char **argv)
 		wait(&status);
 		// waitpid(pid, &status, WNOHANG | WUNTRACED);
 		if (WIFSIGNALED(status))	// change it to SIGCHLD
+		{
 			all->child_killed = 1;
+			return (128 + WTERMSIG(status));
+		}
 	}
 	return (WEXITSTATUS(status));
 }

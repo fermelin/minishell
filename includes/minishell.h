@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/07 14:42:30 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/08 17:34:09 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,5 +158,6 @@ void	dollar(t_all *all, char **word, char *str, int *i, int **start);
 void	search_dollar(char **word, char *str, int **start, int *i);
 void	free_params(t_all *all);
 void	initial_params(t_all *all, int **start);
+void	check_error(char **line, t_all *all);
 
 #endif
