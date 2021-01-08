@@ -125,14 +125,16 @@ void	p_lstclear(t_data **lst)
 
 	if (!lst)
 		return ;
-	tmp = *lst;
-	while (tmp)
+	
+	while (*lst)
 	{
+		tmp = *lst;
 		free_ptrs_array(tmp->args);
 		free_ptrs_array(tmp->redir_array);
+		*lst = (*lst)->next;
 		free(tmp);
-		tmp = tmp->next;
 	}
+	*lst = NULL;
 }
 
 void	p_lstadd_back(t_data **lst, t_data *new)

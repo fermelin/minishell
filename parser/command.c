@@ -19,19 +19,18 @@ void			check_error(char **line, t_all *all)
 
 void			syntax_check(t_all *all, char *str, int **arr, t_list **new)
 {
-	int			i;
 	char		*word;
-	// t_list		*temp;
+	t_list		*temp;
 
-	i = -1;
 	// temp = *new;
 	if (!(word = ft_calloc(((*arr)[1] + 1) - (*arr)[0], sizeof(char))))
 		return (error_malloc());
-	search_variable(all, &word, str, arr);
+	search_variable(all, &word, str, arr);		//!!!!!!!!!!! why does it return str???
 	// if (temp->content == NULL)
 	// 	temp->content = word;
 	// else
-		ft_lstadd_back(new, ft_lstnew(word));
+	temp = ft_lstnew(word);
+	ft_lstadd_back(new, temp);
 }
 
 void			arguments_search(char *str, t_all *all)

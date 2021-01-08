@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/08 14:39:14 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/09 00:48:49 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ static	int	is_exec_file_correct(t_all *all, char **path, char **argv)
 	if ((ft_strncmp("./", argv[0], 2)) == 0 || (ft_strncmp("../", argv[0], 3))
 		== 0 || (ft_strncmp("/", argv[0], 1)) == 0)
 		*path = argv[0];
-	else
-		find_file_in_path(argv[0], path, all);
+	else if (!find_file_in_path(argv[0], path, all))
+		*path = NULL;
 	if (*path && stat(*path, &buf) == 0)
 	{
 		if ((buf.st_mode & S_IFDIR) == S_IFDIR)
@@ -31,25 +31,22 @@ static	int	is_exec_file_correct(t_all *all, char **path, char **argv)
 		else
 			return (1);
 	}
-	if (ft_strncmp(*path, argv[0], ft_strlen(argv[0])) == 0)
+	if ((ft_strncmp("./", argv[0], 2)) == 0 || (ft_strncmp("../", argv[0], 3))
+		== 0 || (ft_strncmp("/", argv[0], 1)) == 0)
 		print_error(argv[0], "", NO_SUCH_FILE);
 	else
 		print_error(argv[0], "", CMD_NOT_FOUND);
 	exit (127);
-
 }
+
 int		child_process(t_all *all, char **argv)
 {
 	char	*path;
-	int		execve_ret;
-	int		error_handling_fd;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	execve_ret = 0;
-	error_handling_fd = 0;
 	if (is_exec_file_correct(all, &path, argv) == 1)
-		execve_ret = execve(path, argv, all->env_vars);
+		execve(path, argv, all->env_vars);
 	exit (0);
 }
 

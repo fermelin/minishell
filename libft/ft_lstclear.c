@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/21 16:46:51 by fermelin          #+#    #+#             */
-/*   Updated: 2020/11/24 08:09:31 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/08 23:38:37 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 
 	if (!lst)
 		return ;
-	while ((*lst))
+	while (*lst)
 	{
-		tmp = (*lst)->next;
+		tmp = *lst;
 		if (del)
 			(*del)((*lst)->content);
-		(*lst) = tmp;
-		free(*lst);
+		*lst = (*lst)->next;
+		free(tmp);
 	}
-	lst = NULL;
+	*lst = NULL;
 }

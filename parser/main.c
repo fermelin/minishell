@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 15:39:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/08 17:31:56 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/08 23:43:52 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,6 @@ void			start_loop(t_all *all)
 		// free_struct(all);
 		p_lstclear(&(all->head));
 	}
-	free(line);
 	ft_putendl_fd("exit", 1);
 }
 

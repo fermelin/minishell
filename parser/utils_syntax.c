@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:58:44 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/08 18:18:17 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/08 22:25:10 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,7 @@ char		*help_variable(t_all *all, char **word, char *str, int **start)
 			all->params.i--;
 		}
 		else if (str[(*start)[0]] == '\\')
-		// {
-		// 	if (str[(*start)[0] + 1] == 't')
-		// 		(*start)[0]++;
-		// 	else
-				dash(all, word, str, start);
-		// }
+			dash(all, word, str, start);
 		else if (str[(*start)[0]] == '\"')
 			two_quotes(all, word, str, start);
 		else if (str[(*start)[0]] == '\'')
@@ -106,10 +101,9 @@ char		*help_variable(t_all *all, char **word, char *str, int **start)
 
 char		*search_variable(t_all *all, char **word, char *str, int **start)
 {
-	char *line;
 
 	initial_params(all, start);
-	line = help_variable(all, word, str, start);
+	help_variable(all, word, str, start);
 	free_params(all);
 	return (str);
 }
