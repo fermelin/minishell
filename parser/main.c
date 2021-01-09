@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 15:39:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/09 19:24:21 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/09 22:44:50 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,20 @@ void				parser(char *str, t_all *all)
 	line_search(str, all, start, i - 1); // когда дошли до конца строки, либо если разделителя не было
 }
 
-int				is_terminating_pipe_in_line(char *line)
+int				is_terminating_pipe_in_line(char **line)
 {
 	int i;
 
 	i = 0;
-	if (line)
+	if (*line)
 	{
-		i = ft_strlen(line) - 1;
-		while (i > 0 && (line[i] == ' ' || line[i] == '\t'))
+		i = ft_strlen(*line) - 1;
+		while (i >= 0 && ((*line)[i] == ' ' || (*line)[i] == '\t'))
 			i--;
-		if (line[i] == '|')
+		if (i >= 0 && (*line)[i] == '|')
 		{
-			ft_putstr_fd("pipe> ", 1);
+			*line = ft_strjoin_free(*line, " ");		//	holly shit ............
+			ft_putstr_fd("pipe> ", 2);
 			return (1);
 		}
 	}
@@ -83,11 +84,12 @@ char			*get_line(void)
 {
 	char	*line2;
 	char	*line;
+	char	*final_line;
 	int		ret;
 
 	line = NULL;
 	line2 = NULL;
-	while ((ret = get_next_line(0, &line)) != 1 || is_terminating_pipe_in_line(line) == 1)
+	while ((ret = get_next_line(0, &line)) != 1 || is_terminating_pipe_in_line(&line) == 1)
 	{
 		if (ret == -1)
 		{
@@ -102,9 +104,9 @@ char			*get_line(void)
 		free(line);
 		line = NULL;
 	}
-	if (line2)
-		line = ft_strjoin_free(line2, line);
-	return (line);
+	final_line = ft_strjoin_free(line2, line);
+	free(line);
+	return (final_line);
 }
 
 void	start_checker(t_all *all, char *argv)
