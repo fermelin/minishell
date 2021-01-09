@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/09 00:48:49 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/09 17:53:41 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int		find_file_in_path(char	*file_name, char **path, t_all *all)
 	if ((env_line = get_env_line_nbr("PATH=", all)) == -1)
 		return (0);
 	splited_path = ft_split(all->env_vars[env_line] + 5, ':');
-	while (splited_path[i])
+	while (splited_path && splited_path[i])
 	{
 		path_slashed = ft_strjoin(splited_path[i], "/");
 		*path = ft_strjoin(path_slashed, file_name);

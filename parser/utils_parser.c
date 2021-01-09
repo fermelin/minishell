@@ -1,56 +1,50 @@
 #include "libft.h"
 #include "minishell.h"
 
-
-void	error_malloc()		//delete delete delete
+void	filling_struct_elem(int word, char **array, int *choice, t_all *all)
 {
-		write(1, "Error malloc\n", 13);
-		return ;
-}
-
-void	filling_struct_elem(int first_word, char **array, int *choice, t_all *all)
-{
-	int i;
-	int j;
-	int g;
+	int		j;
+	int		g;
+	t_data	*last_elem;
 
 	j = 0;
 	g = 0;
-	i = first_word;
-	while (choice[i] != END)
+	last_elem = p_lstlast(all->data);
+	while (choice[word] != END)
 	{
-		if (choice[i] == ARG)
-			all->data->args[j++] = array[i];
-		else if (choice[i] == REDIR)
+		if (choice[word] == ARG)
+			last_elem->args[j++] = array[word];
+		else if (choice[word] == REDIR)
 		{
-			all->data->redir_array[g++] = array[i++];
-			all->data->redir_array[g++] = array[i];
+			last_elem->redir_array[g++] = array[word++];
+			last_elem->redir_array[g++] = array[word];
 		}
-		else if (choice[i] == PIPE)
+		else if (choice[word] == PIPE)
 		{
-			all->data->pipe = 1;
-			all->data->next = p_lstnew();
-			all->data->next->pipe_behind = 1;
-			all->data = all->data->next;
+			last_elem->pipe = 1;
+			last_elem->next = p_lstnew();
+			last_elem->next->pipe_behind = 1;
 			break ;
 		}
-		i++;
+		word++;
 	}
 }
 
 void	allocate_memory_for_struct(t_all *all, int args_count, int redirs_count)
 {
-	if (args_count != 0 && all->data && !(all->data->args = ft_calloc(args_count + 1, sizeof(char*))))
+	t_data	*last_elem;
+
+	if (args_count != 0 && (last_elem = p_lstlast(all->data)) && !(last_elem->args = ft_calloc(args_count + 1, sizeof(char*))))
 		return ;
-	if (redirs_count != 0 && all->data)
+	if (redirs_count != 0 && (last_elem = p_lstlast(all->data)))
 	{
-		if (!(all->data->redir_array = ft_calloc(redirs_count + 1, sizeof(char*))))
+		if (!(last_elem->redir_array = ft_calloc(redirs_count + 1, sizeof(char*))))
 			return ;
-		all->data->redir = 1;
+		last_elem->redir = 1;
 	}
 }
 
-int	*split_args_and_redirects(char **array, t_all *all)
+int	*split_args_and_redirects(char **array, t_all *all, int	array_length)
 {
 	int j;
 	int	redirs_count;
@@ -59,13 +53,10 @@ int	*split_args_and_redirects(char **array, t_all *all)
 	int	first_word;
 	enum	e_type;
 
-	j = 0;
 	first_word = 0;
 	redirs_count = 0;
 	args_count = 0;
-	while (array[j])
-		j++;
-	if (!(choice = ft_calloc(j + 1, sizeof(int))))
+	if (!(choice = ft_calloc(array_length + 1, sizeof(int))))
 		return (0);									//error handling
 	j = 0;
 	while (array[j])
@@ -87,8 +78,8 @@ int	*split_args_and_redirects(char **array, t_all *all)
 			allocate_memory_for_struct(all, args_count, redirs_count);
 			choice[j] = PIPE;
 			filling_struct_elem(first_word, array, choice, all);
-			j++;
-			first_word = j;
+			free(array[j]);
+			first_word = ++j;
 			redirs_count = 0;
 			args_count = 0;
 		}
@@ -98,7 +89,50 @@ int	*split_args_and_redirects(char **array, t_all *all)
 	return (choice);
 }
 
-void filling_struct(t_all *all, t_list *new, int len)
+int		is_special_symbol(t_all *all, char *str)
+{
+	if (str == NULL && all->is_semicolon)
+		return (1);
+	else if (what_redirection(str) != 0 || ft_strncmp(str, "|", 2) == 0)
+		return (1);
+	return (0);
+}
+
+int		check_syntax_error(t_all *all, char **array)
+{
+	int	i;
+
+	i = -1;
+	while (array[++i])
+	{
+		if (is_special_symbol(all, array[i]) != 0 && array[i + 1] &&
+			is_special_symbol(all, array[i + 1]) != 0)
+		{
+			print_error_with_arg(SYNTAX_ERROR, array[i + 1], NULL);
+		}
+		else if (what_redirection(array[i]) != 0 && array[i + 1] == NULL)
+		{
+			if (all->is_semicolon == 1)
+			{
+				all->is_semicolon = 0;
+				print_error_with_arg(SYNTAX_ERROR, ";", NULL);
+			}
+			else
+				print_error_with_arg(SYNTAX_ERROR, "newline", NULL);
+		}
+		else
+			continue ;
+		break ;
+	}
+	if (array[i] != NULL)
+	{
+		all->exit_status = 2;
+		return (-1);
+	}
+	return (0);
+}
+
+int		filling_struct(t_all *all, t_list *new, int len)
 {
 	t_list	*new_copy;
 	char	**array;
@@ -114,30 +148,17 @@ void filling_struct(t_all *all, t_list *new, int len)
 		new_copy = new_copy->next;
 		i++;
 	}
-	i = 0;
-	while (array[i] && i != -1)
+	if (check_syntax_error(all, array) != -1)
 	{
-		if ((ft_strncmp(array[i], ">", 3) == 0 || ft_strncmp(array[i], "<", 3) == 0 ||
-			ft_strncmp(array[i], ">>", 4) == 0) && (array[i + 1] &&
-			ft_strncmp(array[i + 1], "|", 3) == 0))
-		{
-			print_error_with_arg("syntax error near unexpected token", "|", NULL);
-			all->exit_status = 2;
-			i = -2;
-		}
-		if ((ft_strncmp(array[i], ">", 3) == 0 || ft_strncmp(array[i], "<", 3) == 0 ||
-			ft_strncmp(array[i], ">>", 4) == 0) && array[i + 1] == NULL)
-		{
-			print_error_with_arg("syntax error near unexpected token", "newline", NULL);
-			all->exit_status = 2;
-			i = -2;
-		}
-		i++;
+		choice = split_args_and_redirects(array, all, len);
+		free(choice);										// delete this shit
+		free(array);
 	}
-	if (i != -1)
+	else
 	{
-		choice = split_args_and_redirects(array, all);
-		free(choice);
+		free(array);
+		return (-1);
 	}
-	free(array);
+	return (0);
+	
 }

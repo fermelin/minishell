@@ -6,18 +6,14 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/29 13:20:32 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/04 20:20:35 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/09 18:58:02 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#define BUFFER_SIZE 42
-
-static	void	free_buf(char *buf)
-{
-	free(buf);
-	buf = NULL;
-}
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 42
+#endif
 
 static	int		result_with_n(char **line, char **archive, char *n_ptr)
 {
@@ -64,12 +60,13 @@ int				get_next_line(int fd, char **line)
 	{
 		buf[ret] = '\0';
 		archive = ft_strjoin_free(archive, buf);
+		ft_putstr_fd("  \b\b", 1);					//solve it
 		if ((n_ptr = ft_strchr(archive, '\n')))
 		{
-			free_buf(buf);
+			free(buf);
 			return (result_with_n(line, &archive, n_ptr));
 		}
 	}
-	free_buf(buf);
+	free(buf);
 	return (result_without_n(line, &archive, ret));
 }

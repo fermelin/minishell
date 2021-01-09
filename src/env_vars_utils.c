@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 15:29:03 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/23 18:27:59 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/09 14:00:11 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ int		get_env_line_nbr(char *to_find, t_all *all)
 	len = ft_strlen(to_find);
 	while (all->env_vars[i])
 	{
-		if (ft_strncmp(to_find, all->env_vars[i], len) == 0)
+		if (ft_strncmp(to_find, all->env_vars[i], len) == 0 &&
+			((to_find[len - 1] == '=') ||
+				(to_find[len - 1] != '=' && all->env_vars[i][len] == '=')))
 			return (i);
 		i++;
 	}

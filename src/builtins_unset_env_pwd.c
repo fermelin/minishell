@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 15:21:15 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/07 14:43:19 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/09 18:11:07 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static	int	delete_line_from_env(t_all *all, size_t arg_nbr)
 	j = 0;
 	if (!(new_env_vars = (char **)malloc(sizeof(char *) *
 		(all->env_amount + 1))))
-		return (-1);
+		return (print_error("malloc", "", ERR_MALLOC));
 	while (all->env_vars[i])
 	{
 		if (i != arg_nbr)

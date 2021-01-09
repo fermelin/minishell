@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/20 10:35:07 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/23 18:28:57 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/09 17:46:55 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,19 @@ void	output_to_file(t_all *all, char *file_name)
 		print_error("close", "fd", strerror(errno));
 }
 
-void	input_from_file(t_all *all, char *file_name)
+int		input_from_file(t_all *all, char *file_name)
 {
 	int	fd;
 
 	if ((fd = open(file_name, O_RDONLY)) == -1)
 	{
-		print_error("open", file_name, strerror(errno));
-		return ;
+		print_error(file_name, NULL, strerror(errno));
+		all->exit_status = 1;
+		return (-1);
 	}
 	all->save0_red = dup(0);
 	dup2(fd, 0);
 	if (close(fd) == -1)
 		print_error("close", "fd while input_from_file", strerror(errno));
+	return (0);
 }

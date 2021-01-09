@@ -6,7 +6,7 @@
 #    By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/13 17:59:32 by fermelin          #+#    #+#              #
-#    Updated: 2021/01/07 14:19:11 by fermelin         ###   ########.fr        #
+#    Updated: 2021/01/09 15:44:22 by fermelin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,8 @@ SRC =	src/builtins_cd.c \
 		parser/utils_parser.c \
 		struct_parser/p_lstall.c \
 		struct_parser/p_lstnew.c \
-		parser/utils_variable.c
+		parser/utils_variable.c \
+		parser/help_functions.c
 # 		trash/parser.c 
 # 		trash/main.c \
 # 		trash/p_lists.c \

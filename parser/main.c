@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 15:39:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/08 23:43:52 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/09 19:24:21 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,19 +31,6 @@ int			counting_quotes(char *str, int one_quotes, int two_quotes, int i)
 	return (0);
 }
 
-// void				free_struct(t_all *all)
-// {
-// 	t_data *tmp;
-
-// 	tmp = all->head;
-// 	while (tmp)
-// 	{
-// 		free_ptrs_array(tmp->args);
-// 		free_ptrs_array(tmp->redir_array);
-// 		tmp = tmp->next;
-// 	}
-// }
-
 void				parser(char *str, t_all *all)
 {
 	int			i;
@@ -55,9 +42,6 @@ void				parser(char *str, t_all *all)
 	start = 0;
 	one_quotes = 0;
 	two_quotes = 0;
-	all->head = p_lstnew();
-	all->data = all->head;
-	all->tmp = all->data;
 	while (str[++i]) //поиск разделителя
 	{
 		if(str[i] == '\'')
@@ -67,24 +51,32 @@ void				parser(char *str, t_all *all)
 		else if ((str[i] == ';' && (i != 0 && str[i - 1] != '\\')) && //|| str[i] == '|')  && //|| str[i] == '<' || str[i] == '>')	!!!!!!!!!Добавил экранирование точки с запятой !!!!!!!!!!
 				(one_quotes % 2 == 0 && two_quotes % 2 == 0))
 		{
-			all->tmp = all->data;
-			line_search(str, all, start, i - 1); // обработка одной линии (строки) до разделителя
-			all->data = all->tmp;
-			if (execution(all) == 0)
-				exit (0);
-			all->data = all->tmp;
-			// free_struct(all);
-			if (str[i] == '>' && str[i + 1] == '>')
-				i++;
+			if (line_search(str, all, start, i - 1) == -1) // обработка одной линии (строки) до разделителя
+				return ;
+			execution(all);
 			start = i + 1;
-			p_lstclear(&(all->head));
-			all->head = p_lstnew();
-			all->data = all->head;
 		}
 	}
-	all->tmp = all->data;
 	line_search(str, all, start, i - 1); // когда дошли до конца строки, либо если разделителя не было
-	all->data = all->tmp;
+}
+
+int				is_terminating_pipe_in_line(char *line)
+{
+	int i;
+
+	i = 0;
+	if (line)
+	{
+		i = ft_strlen(line) - 1;
+		while (i > 0 && (line[i] == ' ' || line[i] == '\t'))
+			i--;
+		if (line[i] == '|')
+		{
+			ft_putstr_fd("pipe> ", 1);
+			return (1);
+		}
+	}
+	return (0);
 }
 
 char			*get_line(void)
@@ -95,7 +87,7 @@ char			*get_line(void)
 
 	line = NULL;
 	line2 = NULL;
-	while ((ret = get_next_line(0, &line)) != 1)
+	while ((ret = get_next_line(0, &line)) != 1 || is_terminating_pipe_in_line(line) == 1)
 	{
 		if (ret == -1)
 		{
@@ -104,23 +96,25 @@ char			*get_line(void)
 		}
 		if ((!line || !(*line)) && (!line2 || !(*line2)))
 			return (NULL);
+		ft_putstr_fd("  \b\b", 1);
 		if (*line)
 			line2 = ft_strjoin_free(line2, line);
 		free(line);
 		line = NULL;
 	}
-	if (line2 && (*line2))
+	if (line2)
 		line = ft_strjoin_free(line2, line);
 	return (line);
 }
 
 void	start_checker(t_all *all, char *argv)
-{
-	if (argv)
+{	
+	if (argv && first_check_syntax_error(argv, all) != -1)
+	{
 		parser(argv, all);
-	all->whence_the_command = 1;
-	execution(all);
-	p_lstclear(&(all->head));
+		all->whence_the_command = 1;
+		execution(all);
+	}
 }
 
 void			start_loop(t_all *all)
@@ -136,18 +130,16 @@ void			start_loop(t_all *all)
 			ft_putendl_fd("exit", 2);
 			exit(0);						//print exit before it
 		}
-		check_error(&line, all);
-		if (line && (*line))
+		if (line && (*line) && first_check_syntax_error(line, all) != -1)
+		{
 			parser(line, all);
-		if (execution(all) == 0)				//uncomment
-			exit(0);								//uncomment
+			execution(all);
+		}
 		if (all->child_killed != 1)
 			ft_putstr_fd(MAIN_PROMPT, 2);
 		all->child_killed = 0;
 		free (line);
 		line = NULL;
-		// free_struct(all);
-		p_lstclear(&(all->head));
 	}
 	ft_putendl_fd("exit", 1);
 }
@@ -178,6 +170,7 @@ void			struct_init(t_all *all)
 	all->exit_status = 0;
 	all->whence_the_command = 0;
 	all->child_killed = 0;
+	all->is_semicolon = 0;
 }
 
 int				main(int argc, char **argv, char **envp)
@@ -186,7 +179,7 @@ int				main(int argc, char **argv, char **envp)
 
 	struct_init(&all);
 	signal(SIGINT, ctrl_c_handler);
-	signal(SIGQUIT, ctrl_c_handler);
+	signal(SIGQUIT, ctrl_backslash_handler);
 	if (!argc || !argv)
 	{
 		ft_putendl_fd("No parameters needed", 2);

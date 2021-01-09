@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 14:56:10 by fermelin          #+#    #+#             */
-/*   Updated: 2020/12/23 18:11:45 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/09 18:09:38 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 # define IS_A_DIR "is a directory"
 # define PERM_DENIED "Permission denied"
 # define NO_SUCH_FILE "No such file or directory"
-// # define
-// # define
+# define SYNTAX_ERROR "syntax error near unexpected token"
+# define ERR_MALLOC "memory allocation failed"
 // # define
 
 

@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 18:48:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/05 13:35:26 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/09 17:46:22 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int		what_redirection(char *sign)
 	return (0);
 }
 
-void	setting_pipes_and_redirections(t_all *all)
+int		setting_pipes_and_redirections(t_all *all)
 {
 	size_t i;
 
@@ -62,27 +62,37 @@ void	setting_pipes_and_redirections(t_all *all)
 			{
 				i++;
 				if (all->data->redir == 3)
-					input_from_file(all, all->data->redir_array[i]);
+				{
+					if (input_from_file(all, all->data->redir_array[i]) == -1)
+						return (-1);
+				}
 				else
 					output_to_file(all, all->data->redir_array[i]);
 			}
 			i++;
 			if (all->data->redir_array[i])
-				close_file(all);
+				close_file(all, 0);
 		}
+	return (0);
 }
 
-int		execution(t_all *all)
+void	execution(t_all *all)
 {
+	t_data	*head;
+	int		is_error_while_open;
+
+	head = all->data;
+	
 	while (all->data)			//I could use automatic variable and not save the head
 	{
+		is_error_while_open = 0;
 		if (all->data->redir || all->data->pipe || all->data->pipe_behind)
-			setting_pipes_and_redirections(all);
-		if (all->data->args && *all->data->args && choose_command(all) == 0)
-			return (0);
+			is_error_while_open = setting_pipes_and_redirections(all);
+		if (all->data->args && *all->data->args && is_error_while_open != -1)
+			choose_command(all);
 		close_pipe_read(all);
-		close_file(all);
+		close_file(all, is_error_while_open);
 		all->data = all->data->next;
 	}
-	return (1);
+	p_lstclear(&head);
 }

@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/08 17:34:09 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/09 18:01:53 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ typedef	struct		s_all
 	int				child_killed;
 	int				exit_status;
 	int				whence_the_command;
+	int				is_semicolon;
 	int				fildes1[2];
 	int				fildes2[2];
 	int				save0;
@@ -79,8 +80,6 @@ typedef	struct		s_all
 	t_params		params;
 	t_type			type;
 	t_data			*data;
-	t_data			*tmp;
-	t_data			*head;
 }					t_all;
 
 
@@ -104,6 +103,7 @@ int		stat_test(char **file_names);
 int		get_env_line_nbr(char *to_find, t_all *all);
 int		find_file_in_path(char	*file_name, char **path, t_all *all);
 void	ctrl_c_handler(int signum);
+void	ctrl_backslash_handler(int signum);
 void	envp_saving(char **envp, t_all *all);
 char	*get_env_str(char *key, t_all *all);
 int		edit_or_add_env_line(char *key, char *value, t_all *all);
@@ -118,14 +118,14 @@ void	print_error_and_exit(char *command, char *argument, char *error_message, in
 /*
 **		to delete to delete to delete to delete 
 */
-int		execution(t_all *all);
+void	execution(t_all *all);
 int		choose_command(t_all *all);
 
 /*
 **		redirections & pipes
 */
 void	output_to_file(t_all *all, char *file_name);
-void	input_from_file(t_all *all, char *file_name);
+int		input_from_file(t_all *all, char *file_name);
 void	open_pipe_write_and_close_read(t_all *all);
 void	close_file_or_pipe_read(t_all *all);
 int		what_redirection(char *sign);
@@ -133,7 +133,7 @@ int		what_redirection(char *sign);
 /*
 **		parser
 */
-void	close_file(t_all *all);
+void	close_file(t_all *all, int is_error_while_open);
 void	close_pipe_read(t_all *all);
 
 int		counting_quotes(char *str, int one_quotes, int two_quotes, int i);
@@ -142,15 +142,14 @@ char	*get_env_str(char *key, t_all *all);
 int		delete_symbol(char **str, int i, char c);
 char	*search_variable(t_all *all, char **word, char *str, int **arr);
 // void	search_variable(t_all *all, char **word, char *str, int **arr);
-void 	filling_struct(t_all *all, t_list *new, int len);
-void	line_search(char *line, t_all *all, int start, int end);
+int	 	filling_struct(t_all *all, t_list *new, int len);
+int		line_search(char *line, t_all *all, int start, int end);
 t_data	*p_lstnew(void);
 void	p_lstadd_back(t_data **lst, t_data *new);
 void	p_lstclear(t_data **lst);
 t_data	*p_lstlast(t_data *lst);
 int		p_lstsize(t_data *lst);
 void	p_lstdelone(t_data *lst, void (*del)(void*));
-void	error_malloc();
 void	dash(t_all *all, char **word, char *str, int **start);
 void	one_quotes(t_all *all, char **word, char *str, int **start);
 void	two_quotes(t_all *all, char **word, char *str, int **start);
@@ -158,6 +157,8 @@ void	dollar(t_all *all, char **word, char *str, int *i, int **start);
 void	search_dollar(char **word, char *str, int **start, int *i);
 void	free_params(t_all *all);
 void	initial_params(t_all *all, int **start);
-void	check_error(char **line, t_all *all);
-
+int		first_check_syntax_error(char *line, t_all *all);
+char	*help_variable(t_all *all, char **word, char *str, int **start);
+int		syntax_check(t_all *all, char *str, int **arr, t_list **new);
+void	help_arguments(t_all *all, char **str, int **arr, t_list **new);
 #endif

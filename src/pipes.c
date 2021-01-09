@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/24 12:43:24 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/07 14:45:13 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/09 17:45:09 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,16 @@ void			open_pipe_write_and_close_read(t_all *all)
 	}
 }
 
-void			close_file(t_all *all)
+void			close_file(t_all *all, int is_error_while_open)
 {
 	if (all->data->redir == 3)
 	{
-		dup2(all->save0_red, 0);
-		if (close(all->save0_red) == -1)
-			print_error("close", "save0 while red_from", strerror(errno));
+		if (is_error_while_open != -1)
+		{
+			dup2(all->save0_red, 0);
+			if (close(all->save0_red) == -1)
+				print_error("close", "save0 while red_from", strerror(errno));
+		}
 	}
 	else if (all->data->redir)
 	{
