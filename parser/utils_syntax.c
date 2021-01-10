@@ -5,14 +5,43 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/28 12:58:44 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/09 15:44:54 by fermelin         ###   ########.fr       */
+/*   Created: 2020/11/28 12:58:44 by gevelynn          #+#    #+#             */
+/*   Updated: 2021/01/10 20:45:00 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
 #include <stdio.h>
+
+char		*get_env_var_splited(char *str, t_all *all)
+{
+	char	*var;
+	char	*newstr;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	if (!(var = get_env_str(str, all)))
+		return (NULL);
+	if ((all->params.quotes[1] % 2) || !(newstr = ft_strtrim(var, " ")))
+		return (var);
+	while (var[i])
+	{
+		if (ft_isspace(var[i]))
+		{
+			newstr[j++] = var[i];
+			while (ft_isspace(var[i]))
+				i++;
+		}
+		else
+			newstr[j++] = var[i++];
+	}
+	newstr[j] = '\0';
+	free(var);
+	return (newstr);
+}
 
 int			check_dollar(t_all *all, char **word, int start, int *arr)
 {
@@ -29,7 +58,7 @@ int			check_dollar(t_all *all, char **word, int start, int *arr)
 		question_mark = 1;
 		tempory = ft_itoa(all->exit_status);
 	}
-	else if (!(tempory = get_env_str(((*word) + start), all)))
+	else if (!(tempory = get_env_var_splited((*word) + start, all)))
 		tempory = ft_strdup("");
 	free(*word);
 	(*word) = ft_calloc(arr[1] - arr[0] + start + ft_strlen(tempory) + 1, 1);

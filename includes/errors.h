@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 14:56:10 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/09 18:09:38 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/10 20:21:49 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # define NO_SUCH_FILE "No such file or directory"
 # define SYNTAX_ERROR "syntax error near unexpected token"
 # define ERR_MALLOC "memory allocation failed"
-// # define
+# define ERR_QUOTE "unexpected EOF while looking for matching"
 
 
 // # define SS(x,y) printf("%sx",y)

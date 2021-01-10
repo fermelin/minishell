@@ -6,22 +6,39 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 15:39:33 by gevelynn          #+#    #+#             */
-/*   Updated: 2021/01/09 15:56:11 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/10 19:38:05 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
 
 void	help_arguments(t_all *all, char **str, int **arr, t_list **new)
 {
-	syntax_check(all, *str, arr, new);
+	if (((*str)[(*arr)[0]] != '>' && (*str)[(*arr)[0]] != '<' &&
+		(*str)[(*arr)[0]] != '|'))
+		syntax_check(all, *str, arr, new);
 	while ((*str)[(*arr)[1]] == ' ' || (*str)[(*arr)[1]] == '\t')
 	{
 		(*arr)[1]++;
 		(*arr)[0] = (*arr)[1];
 	}
-	(*arr)[1] = (*arr)[0] - 1;
+	if ((*str)[(*arr)[1]] == '>' || (*str)[(*arr)[1]] == '<' ||
+		(*str)[(*arr)[1]] == '|')
+	{
+		(*arr)[0] = (*arr)[1];
+		(*arr)[1]++;
+		if ((*str)[(*arr)[1]] == '>')
+			(*arr)[1]++;
+		syntax_check(all, *str, arr, new);
+		(*arr)[0] = (*arr)[1];
+		// (*arr)[1] += 2;
+	}
+	while ((*str)[(*arr)[1]] == ' ' || (*str)[(*arr)[1]] == '\t')
+	{
+		(*arr)[1]++;
+		(*arr)[0] = (*arr)[1];
+	}
+	(*arr)[1]--;
 }
 
 char	*help_variable(t_all *all, char **word, char *str, int **start)

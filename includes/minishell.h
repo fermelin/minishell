@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/09 18:01:53 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/10 20:08:51 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ int		what_redirection(char *sign);
 void	close_file(t_all *all, int is_error_while_open);
 void	close_pipe_read(t_all *all);
 
-int		counting_quotes(char *str, int one_quotes, int two_quotes, int i);
+void	counting_quotes(char *str, int *one_quotes, int *two_quotes, int i);
 int		check_dollar(t_all *all, char **word, int start, int *arr);
 char	*get_env_str(char *key, t_all *all);
 int		delete_symbol(char **str, int i, char c);

@@ -5,33 +5,32 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/07 15:39:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/09 22:44:50 by fermelin         ###   ########.fr       */
+/*   Created: 2021/01/07 15:39:33 by gevelynn          #+#    #+#             */
+/*   Updated: 2021/01/10 20:29:35 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int			counting_quotes(char *str, int one_quotes, int two_quotes, int i)
+void			counting_quotes(char *str, int *one_quotes, int *two_quotes, int i)
 {
 	if(str[i] == '\'')
 	{   
-		one_quotes++;
-		if(two_quotes % 2 || (str[i - 1] == '\\' && one_quotes % 2))
-			one_quotes++;
-		return (one_quotes);
+		(*one_quotes)++;
+		if((*two_quotes) % 2 || (str[i - 1] == '\\' && (*one_quotes) % 2))
+			(*one_quotes)++;
 	}
 	else if(str[i] == '\"')
 	{
-		two_quotes++;
-		if(one_quotes % 2 || (str[i - 1] == '\\'))
-			two_quotes++;
-		return (two_quotes);
+		(*two_quotes)++;
+		if((*one_quotes) % 2 || (str[i - 1] == '\\'))
+			(*two_quotes)++;
 	}
-	return (0);
 }
 
-void				parser(char *str, t_all *all)
+
+
+void			parser(char *str, t_all *all)
 {
 	int			i;
 	int			start;
@@ -44,10 +43,8 @@ void				parser(char *str, t_all *all)
 	two_quotes = 0;
 	while (str[++i]) //поиск разделителя
 	{
-		if(str[i] == '\'')
-			one_quotes = counting_quotes(str, one_quotes, two_quotes, i);
-		else if(str[i] == '\"')
-			two_quotes = counting_quotes(str, one_quotes, two_quotes, i);
+		if(str[i] == '\'' || str[i] == '\"')
+			counting_quotes(str, &one_quotes, &two_quotes, i);
 		else if ((str[i] == ';' && (i != 0 && str[i - 1] != '\\')) && //|| str[i] == '|')  && //|| str[i] == '<' || str[i] == '>')	!!!!!!!!!Добавил экранирование точки с запятой !!!!!!!!!!
 				(one_quotes % 2 == 0 && two_quotes % 2 == 0))
 		{
@@ -60,19 +57,18 @@ void				parser(char *str, t_all *all)
 	line_search(str, all, start, i - 1); // когда дошли до конца строки, либо если разделителя не было
 }
 
-int				is_terminating_pipe_in_line(char **line)
+int				is_terminating_pipe_in_line(char *line)
 {
 	int i;
 
 	i = 0;
-	if (*line)
+	if (line)
 	{
-		i = ft_strlen(*line) - 1;
-		while (i >= 0 && ((*line)[i] == ' ' || (*line)[i] == '\t'))
+		i = ft_strlen(line) - 1;
+		while (i >= 0 && (line[i] == ' ' || line[i] == '\t'))
 			i--;
-		if (i >= 0 && (*line)[i] == '|')
+		if (i >= 0 && line[i] == '|')
 		{
-			*line = ft_strjoin_free(*line, " ");		//	holly shit ............
 			ft_putstr_fd("pipe> ", 2);
 			return (1);
 		}
@@ -84,12 +80,11 @@ char			*get_line(void)
 {
 	char	*line2;
 	char	*line;
-	char	*final_line;
 	int		ret;
 
 	line = NULL;
 	line2 = NULL;
-	while ((ret = get_next_line(0, &line)) != 1 || is_terminating_pipe_in_line(&line) == 1)
+	while ((ret = get_next_line(0, &line)) != 1 || is_terminating_pipe_in_line(line) == 1)
 	{
 		if (ret == -1)
 		{
@@ -104,22 +99,27 @@ char			*get_line(void)
 		free(line);
 		line = NULL;
 	}
-	final_line = ft_strjoin_free(line2, line);
+	line2 = ft_strjoin_free(line2, line);
 	free(line);
-	return (final_line);
+	return (line2);
 }
 
-void	start_checker(t_all *all, char *argv)
+void			start_checker(t_all *all, char *argv)
 {	
 	if (argv && first_check_syntax_error(argv, all) != -1)
 	{
-		parser(argv, all);
-		all->whence_the_command = 1;
-		execution(all);
+		if (is_terminating_pipe_in_line(argv) != 1)
+		{
+			parser(argv, all);
+			all->whence_the_command = 1;
+			execution(all);
+		}
+		else
+			all->exit_status = 2;
 	}
 }
 
-void			start_loop(t_all *all)
+void			main_loop(t_all *all)
 {
 	char 		*line;
 
@@ -130,7 +130,7 @@ void			start_loop(t_all *all)
 		if ((line = get_line()) == NULL)
 		{
 			ft_putendl_fd("exit", 2);
-			exit(0);						//print exit before it
+			exit(all->exit_status);
 		}
 		if (line && (*line) && first_check_syntax_error(line, all) != -1)
 		{
@@ -143,7 +143,6 @@ void			start_loop(t_all *all)
 		free (line);
 		line = NULL;
 	}
-	ft_putendl_fd("exit", 1);
 }
 
 void			env_init(t_all *all)		//to delete to delete to delete to delete to delete 
@@ -182,16 +181,11 @@ int				main(int argc, char **argv, char **envp)
 	struct_init(&all);
 	signal(SIGINT, ctrl_c_handler);
 	signal(SIGQUIT, ctrl_backslash_handler);
-	if (!argc || !argv)
-	{
-		ft_putendl_fd("No parameters needed", 2);
-		return (-1);
-	}
 	envp_saving(envp, &all);
 	env_init(&all);
-	if (argv[1] && ft_strncmp("-c", argv[1], 3) == 0)
+	if (argc > 1 && argv[1] && ft_strncmp("-c", argv[1], 3) == 0)
 		start_checker(&all, argv[2]);
 	else
-		start_loop(&all);
-	return (all.exit_status);
+		main_loop(&all);
+	exit (all.exit_status);
 }

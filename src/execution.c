@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 18:48:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/09 17:46:22 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/10 18:20:31 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	execution(t_all *all)
 
 	head = all->data;
 	
-	while (all->data)			//I could use automatic variable and not save the head
+	while (all->data)
 	{
 		is_error_while_open = 0;
 		if (all->data->redir || all->data->pipe || all->data->pipe_behind)

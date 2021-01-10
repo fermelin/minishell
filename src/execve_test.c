@@ -6,18 +6,32 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/09 17:53:41 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/10 18:40:50 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static	int	is_path_var_not_empty(t_all *all)
+{
+	char *path;
+
+	path = get_env_str("PATH", all);
+	if (path && *path)
+	{
+		free(path);
+		return (1);
+	}
+	free(path);
+	return (0);
+}
 
 static	int	is_exec_file_correct(t_all *all, char **path, char **argv)
 {
 	struct stat buf;
 
 	if ((ft_strncmp("./", argv[0], 2)) == 0 || (ft_strncmp("../", argv[0], 3))
-		== 0 || (ft_strncmp("/", argv[0], 1)) == 0)
+		== 0 || (ft_strncmp("/", argv[0], 1)) == 0 || stat(argv[0], &buf) == 0)
 		*path = argv[0];
 	else if (!find_file_in_path(argv[0], path, all))
 		*path = NULL;
@@ -32,7 +46,8 @@ static	int	is_exec_file_correct(t_all *all, char **path, char **argv)
 			return (1);
 	}
 	if ((ft_strncmp("./", argv[0], 2)) == 0 || (ft_strncmp("../", argv[0], 3))
-		== 0 || (ft_strncmp("/", argv[0], 1)) == 0)
+		== 0 || (ft_strncmp("/", argv[0], 1)) == 0 ||
+		!is_path_var_not_empty(all))
 		print_error(argv[0], "", NO_SUCH_FILE);
 	else
 		print_error(argv[0], "", CMD_NOT_FOUND);
@@ -108,7 +123,7 @@ int		find_file_in_path(char	*file_name, char **path, t_all *all)
 	if ((env_line = get_env_line_nbr("PATH=", all)) == -1)
 		return (0);
 	splited_path = ft_split(all->env_vars[env_line] + 5, ':');
-	while (splited_path && splited_path[i])
+	while (file_name && *file_name && splited_path && splited_path[i])
 	{
 		path_slashed = ft_strjoin(splited_path[i], "/");
 		*path = ft_strjoin(path_slashed, file_name);
