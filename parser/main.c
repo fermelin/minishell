@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 15:39:33 by gevelynn          #+#    #+#             */
-/*   Updated: 2021/01/10 20:29:35 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 00:59:58 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int				is_terminating_pipe_in_line(char *line)
 		i = ft_strlen(line) - 1;
 		while (i >= 0 && (line[i] == ' ' || line[i] == '\t'))
 			i--;
-		if (i >= 0 && line[i] == '|')
+		if (i > 0 && line[i] == '|')
 		{
 			ft_putstr_fd("pipe> ", 2);
 			return (1);
@@ -92,12 +92,14 @@ char			*get_line(void)
 			return (NULL);
 		}
 		if ((!line || !(*line)) && (!line2 || !(*line2)))
+		{
+			free(line);
 			return (NULL);
+		}
 		ft_putstr_fd("  \b\b", 1);
 		if (*line)
 			line2 = ft_strjoin_free(line2, line);
 		free(line);
-		line = NULL;
 	}
 	line2 = ft_strjoin_free(line2, line);
 	free(line);

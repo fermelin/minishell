@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 16:06:35 by gevelynn          #+#    #+#             */
-/*   Updated: 2021/01/10 20:38:07 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 01:25:02 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,34 @@ int				error_quotes(t_all *all, char *line)
 	return (0);
 }
 
+int				second_check_syntax_error(char *line, t_all *all, int i)
+{
+	while (line[i])
+	{
+		if (line[i] == '|' || line[i] == '<' || line[i] == '>' || line[i] == ';')
+		{
+			i++;
+			while (ft_isspace(line[i]))
+				i++;
+			if (line[i] == '|' || line[i] == ';')// || line[i] == '<' || line[i] == '>' )
+			{
+				if (line[i] == ';')
+					print_error_with_arg(SYNTAX_ERROR, ";", NULL);
+				else if (line[i] == '|')
+					print_error_with_arg(SYNTAX_ERROR, "|", NULL);
+				// else if (line[i] == '<')
+				// 	print_error_with_arg(SYNTAX_ERROR, "<", NULL);
+				// else if (line[i] == '>')
+				// 	print_error_with_arg(SYNTAX_ERROR, ">", NULL);
+				all->exit_status = 2;
+				return (-1);
+			}
+		}
+		i++;
+	}
+	return (0);
+}
+
 int				first_check_syntax_error(char *line, t_all *all)
 {
 	int i;
@@ -56,6 +84,8 @@ int				first_check_syntax_error(char *line, t_all *all)
 		return (-1);
 	}
 	if (error_quotes(all, line) == -1)
+		return (-1);
+	if (second_check_syntax_error(line, all, i) == -1)
 		return (-1);
 	return (0);
 }
@@ -94,8 +124,13 @@ int				check_conditions_for_start_arg_processing(char *str, int *arr, int *quote
 {
 	if ((str[arr[1]] == ' ' || str[arr[1]] == '\t' || str[arr[1]] == '|'
 		|| str[arr[1]] == '>' || str[arr[1]] == '<') &&
-		str[arr[1] - 1] != '\\' && quotes[0] % 2 == 0 && quotes[1] % 2 == 0)
-		return (1);
+		quotes[0] % 2 == 0 && quotes[1] % 2 == 0)
+	{
+		if (arr[1] != 0 && str[arr[1] - 1] != '\\')
+			return (1);
+		else if (arr[1] == 0)
+			return (1);
+	}
 	return (0);
 }
 
@@ -130,8 +165,8 @@ static void	line_trim(char *line, int *start, int *end)
 {
 	while (line[*start] == ' ' || line[*start] == '\t')
 		(*start)++;
-	while (((line[*end] == ' ' && line[*end - 1] != '\\') ||
-				line[*end] == '\t') && *end != 0)
+	while (((line[*end] == ' ' || line[*end] == '\t') &&
+		((*end != 0 && line[*end - 1] != '\\') || *end == 0)))
 		(*end)--;
 	if (line[*end] != ' ' || line[*end] != '\t')
 		(*end)++;

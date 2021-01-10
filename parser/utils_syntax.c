@@ -6,27 +6,22 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:58:44 by gevelynn          #+#    #+#             */
-/*   Updated: 2021/01/10 20:45:00 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 00:26:40 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
-#include <stdio.h>
 
-char		*get_env_var_splited(char *str, t_all *all)
+char		*remove_extra_spaces_in_line(char *var)
 {
-	char	*var;
 	char	*newstr;
 	int		i;
 	int		j;
 
 	i = 0;
 	j = 0;
-	if (!(var = get_env_str(str, all)))
+	if (!(newstr = (char*)malloc(sizeof(char) * (ft_strlen(var) + 1))))
 		return (NULL);
-	if ((all->params.quotes[1] % 2) || !(newstr = ft_strtrim(var, " ")))
-		return (var);
 	while (var[i])
 	{
 		if (ft_isspace(var[i]))
@@ -39,6 +34,26 @@ char		*get_env_var_splited(char *str, t_all *all)
 			newstr[j++] = var[i++];
 	}
 	newstr[j] = '\0';
+	return (newstr);
+}
+
+char		*get_env_var_splited(char *str, t_all *all)
+{
+	char	*var;
+	char	*newstr;
+	char	*trimmed_var;
+
+	if (!(var = get_env_str(str, all)))
+		return (NULL);
+	if ((all->params.quotes[1] % 2) || !(trimmed_var = ft_strtrim(var, " \t")))
+		return (var);
+	if (!(newstr = remove_extra_spaces_in_line(trimmed_var)))
+	{
+		free(trimmed_var);
+		free(var);
+		return (NULL);
+	}
+	free(trimmed_var);
 	free(var);
 	return (newstr);
 }
@@ -48,16 +63,11 @@ int			check_dollar(t_all *all, char **word, int start, int *arr)
 	int		len;
 	char	*tmp;
 	char	*tempory;
-	int		question_mark;
 
 	tempory = NULL;
-	question_mark = 0;
 	tmp = ft_strdup((*word));
 	if (((*word)[start]) == '?')
-	{
-		question_mark = 1;
 		tempory = ft_itoa(all->exit_status);
-	}
 	else if (!(tempory = get_env_var_splited((*word) + start, all)))
 		tempory = ft_strdup("");
 	free(*word);
@@ -66,8 +76,7 @@ int			check_dollar(t_all *all, char **word, int start, int *arr)
 	while (++len < start)
 		(*word)[len] = tmp[len];
 	ft_strlcat((*word), tempory, ft_strlen(tempory) + ft_strlen(*word) + 1);
-	if (tempory[0] == '\0' || question_mark == 1)
-		free(tempory);
+	free(tempory);
 	free(tmp);
 	return (ft_strlen((*word)));
 }
