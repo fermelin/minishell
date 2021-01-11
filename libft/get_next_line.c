@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/29 13:20:32 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/09 18:58:02 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 13:56:45 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int				get_next_line(int fd, char **line)
 	{
 		buf[ret] = '\0';
 		archive = ft_strjoin_free(archive, buf);
-		ft_putstr_fd("  \b\b", 1);					//solve it
+		ft_putstr_fd("  \b\b", 1);
 		if ((n_ptr = ft_strchr(archive, '\n')))
 		{
 			free(buf);

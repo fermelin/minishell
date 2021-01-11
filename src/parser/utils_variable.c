@@ -6,22 +6,14 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 20:57:23 by gevelynn          #+#    #+#             */
-/*   Updated: 2021/01/08 18:19:24 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 14:41:28 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_params(t_all *all)
-{
-	free(all->params.quotes);
-	free(all->params.arr);
-}
-
 void	initial_params(t_all *all, int **start)
 {
-	all->params.quotes = malloc(sizeof(int) * 2);
-	all->params.arr = malloc(sizeof(int) * 2);
 	all->params.arr[0] = (*start)[0];
 	all->params.arr[1] = (*start)[1];
 	all->params.quotes[0] = 0;

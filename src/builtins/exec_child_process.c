@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execve_test.c                                      :+:      :+:    :+:   */
+/*   exec_child_process.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/10 18:40:50 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 19:15:41 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,35 @@ static	int	is_path_var_not_empty(t_all *all)
 		return (1);
 	}
 	free(path);
+	return (0);
+}
+
+static	int	find_file_in_path(char *file_name, char **path, t_all *all)
+{
+	char			*path_slashed;
+	char			**splited_path;
+	int				env_line;
+	int				i;
+	struct stat		buf;
+
+	i = 0;
+	if ((env_line = get_env_line_nbr("PATH=", all)) == -1)
+		return (0);
+	splited_path = ft_split(all->env_vars[env_line] + 5, ':');
+	while (file_name && *file_name && splited_path && splited_path[i])
+	{
+		path_slashed = ft_strjoin(splited_path[i], "/");
+		*path = ft_strjoin(path_slashed, file_name);
+		free(path_slashed);
+		if (stat(*path, &buf) == 0)
+		{
+			free_ptrs_array(splited_path);
+			return (1);
+		}
+		free(*path);
+		i++;
+	}
+	free_ptrs_array(splited_path);
 	return (0);
 }
 
@@ -51,10 +80,10 @@ static	int	is_exec_file_correct(t_all *all, char **path, char **argv)
 		print_error(argv[0], "", NO_SUCH_FILE);
 	else
 		print_error(argv[0], "", CMD_NOT_FOUND);
-	exit (127);
+	exit(127);
 }
 
-int		child_process(t_all *all, char **argv)
+static	int	child_process(t_all *all, char **argv)
 {
 	char	*path;
 
@@ -62,10 +91,10 @@ int		child_process(t_all *all, char **argv)
 	signal(SIGQUIT, SIG_DFL);
 	if (is_exec_file_correct(all, &path, argv) == 1)
 		execve(path, argv, all->env_vars);
-	exit (0);
+	exit(0);
 }
 
-int		exec_cmds(t_all *all, char **argv)
+int			exec_cmds(t_all *all, char **argv)
 {
 	int		status;
 	int		pid;
@@ -76,66 +105,11 @@ int		exec_cmds(t_all *all, char **argv)
 	else
 	{
 		wait(&status);
-		// waitpid(pid, &status, WNOHANG | WUNTRACED);
-		if (WIFSIGNALED(status))	// change it to SIGCHLD
+		if (WIFSIGNALED(status))
 		{
 			all->child_killed = 1;
 			return (128 + WTERMSIG(status));
 		}
 	}
 	return (WEXITSTATUS(status));
-}
-
-int		stat_test(char **file_names)		//to delete to delete to delete to delete to delete to delete to delete to delete 
-{
-	struct stat buf;
-	int		stat_ret;
-	int		i;
-
-	i = 0;
-	while (file_names[i])
-	{
-		stat_ret = stat(file_names[i], &buf);
-		if (stat_ret == -1)
-			printf("file %d not found\n", i);
-		else if (stat_ret == 0)
-		{
-			printf("file %d exists!!!\n", i);
-			if ((buf.st_mode & S_IFDIR) == S_IFDIR)
-				printf("this is a directory!!!\n");
-			else if ((buf.st_mode & S_IXUSR) == S_IXUSR)
-				printf("This file has exec rights!!!\n");
-		}
-		i++;
-	}
-	return (0);
-}
-
-int		find_file_in_path(char	*file_name, char **path, t_all *all)
-{
-	char	*path_slashed;
-	char	**splited_path;
-	int		env_line;
-	int		i;
-	struct stat buf;
-
-	i = 0;
-	if ((env_line = get_env_line_nbr("PATH=", all)) == -1)
-		return (0);
-	splited_path = ft_split(all->env_vars[env_line] + 5, ':');
-	while (file_name && *file_name && splited_path && splited_path[i])
-	{
-		path_slashed = ft_strjoin(splited_path[i], "/");
-		*path = ft_strjoin(path_slashed, file_name);
-		free(path_slashed);
-		if (stat(*path, &buf) == 0)
-		{
-			free_ptrs_array(splited_path);
-			return (1);
-		}
-		free(*path);
-		i++;
-	}
-	free_ptrs_array(splited_path);
-	return (0);
 }

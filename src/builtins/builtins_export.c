@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 11:34:56 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/07 14:43:22 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 12:46:34 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,46 +54,6 @@ static	int		export_arg_validation(char *arg, int *exit_status)
 	return (1);
 }
 
-static	int		is_escape_symbol(char c)
-{
-	if (c == '\\' || c == '\"' || c == '$')
-		return (1);
-	return (0);
-}
-
-void			print_export_without_args(t_all *all, int *mass)
-{
-	size_t i;
-	size_t j;
-	char	*env_var;
-
-	i = 0;
-	while (i < all->env_amount)
-	{
-		j = 0;
-		ft_putstr_fd("declare -x ", 1);
-		while (all->env_vars[mass[i]][j - 1] != '=' && all->env_vars[mass[i]][j])
-			j++;
-		write(1, all->env_vars[mass[i]], j);
-		write(1, "\"", 1);
-		while (all->env_vars[mass[i]][j])
-		{
-			env_var = &all->env_vars[mass[i]][j];
-			while (all->env_vars[mass[i]][j] && is_escape_symbol(all->env_vars[mass[i]][j]) != 1)
-				j++;
-			if (is_escape_symbol(all->env_vars[mass[i]][j]) == 1)
-			{
-				write(1, "\\", 1);
-				j++;
-			}
-			write(1, env_var, &all->env_vars[mass[i]][j] - env_var);
-		}
-		// ft_putstr_fd(all->env_vars[mass[i]] + j, 1);
-		write(1, "\"\n", 2);
-		i++;
-	}
-}
-
 static	int		export_without_args(t_all *all)
 {
 	int		*mass;
@@ -108,13 +68,12 @@ static	int		export_without_args(t_all *all)
 		i++;
 	}
 	env_vars_sort(all, &mass);
-	i = 0;
 	print_export_without_args(all, mass);
 	free(mass);
 	return (0);
 }
 
-int			ft_export(t_all *all, char **args)	//to handle bad symbols
+int				ft_export(t_all *all, char **args)
 {
 	char	*equal_sign_ptr;
 	int		shift;
@@ -127,14 +86,15 @@ int			ft_export(t_all *all, char **args)	//to handle bad symbols
 	else
 		while (*args)
 		{
-			if ((export_arg_validation(*args, &exit_status) == 0) && (equal_sign_ptr = ft_strchr(*args, '='))
+			if ((export_arg_validation(*args, &exit_status) == 0) &&
+				(equal_sign_ptr = ft_strchr(*args, '='))
 				&& equal_sign_ptr != *args)
 			{
 				shift = equal_sign_ptr - *args + 1;
 				if (!(key = (char *)malloc(sizeof(char) * (shift + 1))))
 					return (1);
 				ft_strlcpy(key, *args, shift + 1);
-				edit_or_add_env_line(key, &((*args)[shift]), all);	//to do key validation before this 
+				edit_or_add_env_line(key, &((*args)[shift]), all);
 				free(key);
 			}
 			args++;

@@ -6,11 +6,32 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 15:29:03 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/10 17:07:35 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 12:48:48 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	env_init(t_all *all)
+{
+	char	*cwd;
+	char	*shlvl_str;
+	int		shlvl_int;
+
+	cwd = getcwd(NULL, 0);
+	edit_or_add_env_line("PWD=", cwd, all);
+	if (!(shlvl_str = get_env_str("SHLVL", all)))
+		edit_or_add_env_line("SHLVL=", "1", all);
+	else
+	{
+		shlvl_int = ft_atoi(shlvl_str) + 1;
+		free(shlvl_str);
+		shlvl_str = ft_itoa(shlvl_int);
+		edit_or_add_env_line("SHLVL=", shlvl_str, all);
+		free(shlvl_str);
+	}
+	free(cwd);
+}
 
 int		get_env_line_nbr(char *to_find, t_all *all)
 {

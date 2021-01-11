@@ -6,35 +6,34 @@
 #    By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/13 17:59:32 by fermelin          #+#    #+#              #
-#    Updated: 2021/01/09 15:44:22 by fermelin         ###   ########.fr        #
+#    Updated: 2021/01/11 14:32:56 by fermelin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-
 NAME = minishell
 
-SRC =	src/builtins_cd.c \
-		src/builtins_export.c \
-		src/builtins_utils.c \
-		src/builtins_unset_env_pwd.c \
-		src/execve_test.c \
-		src/error_handling.c \
-		src/pipes.c \
-		src/redirections.c \
-		src/env_vars_utils.c \
-		src/execution.c \
-		src/builtins_echo.c \
-		parser/command.c \
-		parser/main.c \
-		parser/utils_syntax.c \
-		parser/utils_parser.c \
-		struct_parser/p_lstall.c \
-		struct_parser/p_lstnew.c \
-		parser/utils_variable.c \
-		parser/help_functions.c
-# 		trash/parser.c 
-# 		trash/main.c \
-# 		trash/p_lists.c \
+SRC =	src/builtins/builtins_cd.c \
+		src/builtins/builtins_export.c \
+		src/builtins/builtins_export_utils.c \
+		src/builtins/builtins_utils.c \
+		src/builtins/builtins_unset_env_pwd.c \
+		src/builtins/exec_child_process.c \
+		src/builtins/error_handling.c \
+		src/builtins/pipes.c \
+		src/builtins/redirections.c \
+		src/builtins/env_vars_utils.c \
+		src/builtins/execution.c \
+		src/builtins/builtins_echo_exit.c \
+		src/parser/command.c \
+		src/parser/main.c \
+		src/parser/utils_syntax.c \
+		src/parser/filling_token_struct.c \
+		src/parser/list_struct.c \
+		src/parser/utils_variable.c \
+		src/parser/help_functions.c \
+		src/parser/split_args_and_redirects.c \
+		src/parser/check_syntax_errors.c \
+		src/parser/parser.c 
 
 OBJ = $(SRC:.c=.o)
 
@@ -45,10 +44,6 @@ LIBFT = $(LIBFTDIR)libft.a
 CC = gcc
 
 CFLAGS = -g -Wall -Werror -Wextra -I./libft -I./includes #-fsanitize=address
-
-# ifdef ANTON
-# CFLAGS += -D ANTON=1
-# endif
 
 all:	$(NAME)
 
@@ -70,10 +65,6 @@ fclean: clean
 		make fclean -C $(LIBFTDIR)
 		rm -f $(NAME)
 
-# anton: 
-# 	$(MAKE) ANTON=1 re
-
 re: fclean all
 
 .PHONY: all clean fclean re
-

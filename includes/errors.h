@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 14:56:10 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/10 20:21:49 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 14:09:42 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,5 @@
 # define SYNTAX_ERROR "syntax error near unexpected token"
 # define ERR_MALLOC "memory allocation failed"
 # define ERR_QUOTE "unexpected EOF while looking for matching"
-
-
-// # define SS(x,y) printf("%sx",y)
-// SS("HELLO", "kasljf")
-
 
 #endif

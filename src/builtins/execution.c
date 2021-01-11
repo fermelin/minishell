@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 18:48:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/10 18:20:31 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 12:51:29 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,8 @@ int		choose_command(t_all *all)
 		all->exit_status = ft_unset(all, &(all->data->args[1]));
 	else if (ft_strncmp("export", all->data->args[0], 7) == 0)
 		all->exit_status = ft_export(all, all->data->args + 1);
-	else if (ft_strncmp("stat", all->data->args[0], 5) == 0)		//to delete to delete to delete to delete to delete 
-		all->exit_status = stat_test(&(all->data->args[1]));
 	else if (ft_strncmp("echo", all->data->args[0], 5) == 0)
 		all->exit_status = ft_echo(all->data->args + 1);
-	else if (ft_strncmp("q", all->data->args[0], 2) == 0)			//to delete to delete to delete to delete to delete 
-		exit (0);
 	else if (ft_strncmp("exit", all->data->args[0], 5) == 0)
 		all->exit_status = ft_exit(all->data->args + 1, all);
 	else if (all->data->args && *all->data->args)
@@ -82,7 +78,6 @@ void	execution(t_all *all)
 	int		is_error_while_open;
 
 	head = all->data;
-	
 	while (all->data)
 	{
 		is_error_while_open = 0;

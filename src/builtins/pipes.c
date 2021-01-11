@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/24 12:43:24 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/09 17:45:09 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 12:52:32 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ static	void	close_write_and_open_read(t_all *all)
 {
 	dup2(all->save1, 1);
 	if (close(all->save1) == -1)
-		print_error("close", "save1", strerror(errno));	//close write
+		print_error("close", "save1", strerror(errno));
 	all->save0 = dup(0);
 	if (close(0) == -1)
 		print_error("close", "0", strerror(errno));
-	dup2(all->fildes1[0], 0);	//open read
+	dup2(all->fildes1[0], 0);
 	if (close(all->fildes1[0]) == -1)
 		print_error("close", "fildes1[0] 2", strerror(errno));
 }
@@ -33,7 +33,7 @@ void			open_pipe_write_and_close_read(t_all *all)
 		all->save1 = dup(1);
 		if (close(1) == -1)
 			print_error("close", "1", strerror(errno));
-		dup2(all->fildes1[1], 1);	//open write
+		dup2(all->fildes1[1], 1);
 		if (close(all->fildes1[1]) == -1)
 			print_error("close", "fildes1[1] 2", strerror(errno));
 	}
@@ -42,11 +42,10 @@ void			open_pipe_write_and_close_read(t_all *all)
 	if (all->data->pipe == 1 && all->data->pipe_behind == 1)
 	{
 		pipe(all->fildes2);
-
 		all->save1 = dup(1);
 		if (close(1) == -1)
 			print_error("close", "1", strerror(errno));
-		dup2(all->fildes2[1], 1);	//open write for new pipe
+		dup2(all->fildes2[1], 1);
 		if (close(all->fildes2[1]) == -1)
 			print_error("close", "fildes2[1] 1", strerror(errno));
 	}
@@ -77,7 +76,7 @@ void			close_pipe_read(t_all *all)
 	{
 		dup2(all->save0, 0);
 		if (close(all->save0) == -1)
-			print_error("close", "save0", strerror(errno));	//close read
+			print_error("close", "save0", strerror(errno));
 	}
 	if (all->data->pipe == 1 && all->data->pipe_behind == 1)
 	{
