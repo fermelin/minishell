@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 15:39:33 by gevelynn          #+#    #+#             */
-/*   Updated: 2021/01/11 13:03:29 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 21:56:00 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static	void	main_loop(t_all *all)
 			parser(line, all);
 			execution(all);
 		}
-		if (all->child_killed != 1)
+		if (all->child_killed != 1 || all->exit_status == 131)
 			ft_putstr_fd(MAIN_PROMPT, 2);
 		all->child_killed = 0;
 		free(line);
@@ -66,8 +66,8 @@ int				main(int argc, char **argv, char **envp)
 	t_all		all;
 
 	struct_init(&all);
-	signal(SIGINT, ctrl_c_handler);
-	signal(SIGQUIT, ctrl_backslash_handler);
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, sig_handler);
 	envp_saving(envp, &all);
 	env_init(&all);
 	if (argc > 1 && argv[1] && ft_strncmp("-c", argv[1], 3) == 0)

@@ -6,17 +6,18 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 11:37:00 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/10 17:07:50 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 21:40:56 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ctrl_c_handler(int signum)
+void		sig_handler(int signum)
 {
-	signum = 0;
-	signum++;
-	ft_putstr_fd("\b\b  \n> \033[1;35m$\033[0m ", 2);
+	if (signum == SIGINT)
+		ft_putstr_fd("\b\b  \n> \033[1;35m$\033[0m ", 2);
+	else if (signum == SIGQUIT)
+		ft_putstr_fd("\b\b  \b\b", 2);
 }
 
 void		ctrl_backslash_handler(int signum)

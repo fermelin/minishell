@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/09 18:02:13 by gevelynn          #+#    #+#             */
-/*   Updated: 2021/01/11 14:48:19 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 22:37:55 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int				filling_struct(t_all *all, t_list *new, int len)
 	}
 	else
 	{
-		free(array);
+		free_ptrs_array(array);
 		return (-1);
 	}
 	return (0);

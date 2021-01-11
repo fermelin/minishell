@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/17 11:21:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/11 19:15:41 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 21:52:12 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ int			exec_cmds(t_all *all, char **argv)
 		if (WIFSIGNALED(status))
 		{
 			all->child_killed = 1;
+			if (WTERMSIG(status) == SIGQUIT)
+				ft_putendl_fd(SIGQUIT_TERM, 2);
 			return (128 + WTERMSIG(status));
 		}
 	}

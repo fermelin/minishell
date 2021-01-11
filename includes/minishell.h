@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/11 18:57:25 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 21:51:54 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 
 # define SHELL_NAME "minishell"
 # define MAIN_PROMPT "> \033[1;35m$\033[0m "
+# define SIGQUIT_TERM "Quit"
 
 typedef struct		s_params
 {
@@ -94,8 +95,7 @@ void				print_export_without_args(t_all *all, int *mass);
 void				free_ptrs_array(char **ptr_array);
 int					exec_cmds(t_all *all, char **argv);
 int					get_env_line_nbr(char *to_find, t_all *all);
-void				ctrl_c_handler(int signum);
-void				ctrl_backslash_handler(int signum);
+void				sig_handler(int signum);
 void				envp_saving(char **envp, t_all *all);
 char				*get_env_str(char *key, t_all *all);
 int					edit_or_add_env_line(char *key, char *value, t_all *all);

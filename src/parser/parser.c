@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 12:08:05 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/11 13:19:58 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 20:45:37 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ char		*get_line(void)
 			free(line);
 			return (NULL);
 		}
-		ft_putstr_fd("  \b\b", 1);
 		line2 = ft_strjoin_free(line2, line);
 		free(line);
 	}

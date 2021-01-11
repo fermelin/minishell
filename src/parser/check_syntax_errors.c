@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 12:01:01 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/11 13:01:19 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/11 22:23:22 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,25 +41,29 @@ static	int	error_quotes(t_all *all, char *line)
 
 static	int	second_check_syntax_error(char *line, t_all *all, int i)
 {
-	while (line[i])
+	if (line && i >= 0)
 	{
-		if (line[i] == '|' || line[i] == '<' ||
-			line[i] == '>' || line[i] == ';')
+		while (line[i])
 		{
-			i++;
-			while (ft_isspace(line[i]))
-				i++;
-			if (line[i] == '|' || line[i] == ';')
+			if ((line[i] == '|' || line[i] == '<' ||
+				line[i] == '>' || line[i] == ';' ) && line[i + 1])
 			{
-				if (line[i] == ';')
-					print_error_with_arg(SYNTAX_ERROR, ";", NULL);
-				else if (line[i] == '|')
-					print_error_with_arg(SYNTAX_ERROR, "|", NULL);
-				all->exit_status = 2;
-				return (-1);
+				i++;
+				while (ft_isspace(line[i]))
+					i++;
+				if (line[i] == '|' || line[i] == ';')
+				{
+					if (line[i] == ';')
+						print_error_with_arg(SYNTAX_ERROR, ";", NULL);
+					else if (line[i] == '|')
+						print_error_with_arg(SYNTAX_ERROR, "|", NULL);
+					all->exit_status = 2;
+					return (-1);
+				}
 			}
+			if (line[i])
+				i++;
 		}
-		i++;
 	}
 	return (0);
 }
