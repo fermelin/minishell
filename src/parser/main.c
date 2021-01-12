@@ -6,11 +6,19 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 15:39:33 by gevelynn          #+#    #+#             */
-/*   Updated: 2021/01/11 21:56:00 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/12 11:16:05 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static	void	sig_handler(int signum)
+{
+	if (signum == SIGINT)
+		ft_putstr_fd("\b\b  \n> \033[1;35m$\033[0m ", 2);
+	else if (signum == SIGQUIT)
+		ft_putstr_fd("\b\b  \b\b", 2);
+}
 
 static	void	just_one_arg_processing(t_all *all, char *argv)
 {

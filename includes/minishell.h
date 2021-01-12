@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/13 19:27:00 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/11 21:51:54 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/12 11:20:13 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 
 # define SHELL_NAME "minishell"
 # define MAIN_PROMPT "> \033[1;35m$\033[0m "
-# define SIGQUIT_TERM "Quit"
+# define SIGQUIT_TERM "Quit: 3"
 
 typedef struct		s_params
 {
@@ -95,13 +95,11 @@ void				print_export_without_args(t_all *all, int *mass);
 void				free_ptrs_array(char **ptr_array);
 int					exec_cmds(t_all *all, char **argv);
 int					get_env_line_nbr(char *to_find, t_all *all);
-void				sig_handler(int signum);
 void				envp_saving(char **envp, t_all *all);
 char				*get_env_str(char *key, t_all *all);
 int					edit_or_add_env_line(char *key, char *value, t_all *all);
 void				env_init(t_all *all);
 void				execution(t_all *all);
-int					choose_command(t_all *all);
 
 /*
 **					errors handling
@@ -133,26 +131,28 @@ int					split_args_and_redirects(char **array, t_all *all,
 					int array_length);
 void				counting_quotes(char *str, int *one_quotes, int *two_quotes,
 					int i);
-int					check_dollar(t_all *all, char **word, int start, int *arr);
 char				*get_env_str(char *key, t_all *all);
-int					delete_symbol(char **str, int i, char c);
 void				search_variable(t_all *all, char **word, char *str,
 					int **arr);
 int					filling_struct(t_all *all, t_list *new, int len);
 int					line_search(char *line, t_all *all, int start, int end);
-t_data				*p_lstnew(void);
-void				p_lstadd_back(t_data **lst, t_data *new);
-void				p_lstclear(t_data **lst);
-t_data				*p_lstlast(t_data *lst);
-int					p_lstsize(t_data *lst);
 void				dash(t_all *all, char **word, char *str, int **start);
 void				one_quotes(t_all *all, char **word, char *str, int **start);
 void				two_quotes(t_all *all, char **word, char *str, int **start);
-void				search_dollar(char **word, char *str, int **start, int *i);
 void				initial_params(t_all *all, int **start);
 int					first_check_syntax_error(char *line, t_all *all);
 int					syntax_check(t_all *all, char *str, int **arr,
 					t_list **new);
 void				help_arguments(t_all *all, char **str, int **arr,
 					t_list **new);
+
+/*
+**					lists
+*/
+t_data				*p_lstnew(void);
+void				p_lstadd_back(t_data **lst, t_data *new);
+void				p_lstclear(t_data **lst);
+t_data				*p_lstlast(t_data *lst);
+int					p_lstsize(t_data *lst);
+
 #endif

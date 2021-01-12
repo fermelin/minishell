@@ -6,13 +6,13 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/25 18:48:33 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/11 12:51:29 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/12 11:16:44 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		choose_command(t_all *all)
+static	int	choose_command(t_all *all)
 {
 	if (ft_strncmp("cd", all->data->args[0], 3) == 0)
 		all->exit_status = ft_cd(all->data->args[1], all);
@@ -33,7 +33,7 @@ int		choose_command(t_all *all)
 	return (1);
 }
 
-int		what_redirection(char *sign)
+int			what_redirection(char *sign)
 {
 	if (ft_strncmp(">", sign, 2) == 0)
 		return (1);
@@ -44,7 +44,7 @@ int		what_redirection(char *sign)
 	return (0);
 }
 
-int		setting_pipes_and_redirections(t_all *all)
+static	int	setting_pipes_and_redirections(t_all *all)
 {
 	size_t i;
 
@@ -72,7 +72,7 @@ int		setting_pipes_and_redirections(t_all *all)
 	return (0);
 }
 
-void	execution(t_all *all)
+void		execution(t_all *all)
 {
 	t_data	*head;
 	int		is_error_while_open;

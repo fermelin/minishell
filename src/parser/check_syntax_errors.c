@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 12:01:01 by fermelin          #+#    #+#             */
-/*   Updated: 2021/01/11 22:23:22 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/12 11:06:04 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static	int	second_check_syntax_error(char *line, t_all *all, int i)
 		while (line[i])
 		{
 			if ((line[i] == '|' || line[i] == '<' ||
-				line[i] == '>' || line[i] == ';' ) && line[i + 1])
+				line[i] == '>' || line[i] == ';') && line[i + 1])
 			{
 				i++;
 				while (ft_isspace(line[i]))

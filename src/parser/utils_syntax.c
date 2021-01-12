@@ -6,7 +6,7 @@
 /*   By: fermelin <fermelin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/28 12:58:44 by gevelynn          #+#    #+#             */
-/*   Updated: 2021/01/11 19:12:15 by fermelin         ###   ########.fr       */
+/*   Updated: 2021/01/12 11:09:02 by fermelin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static	char	*get_env_var_splited(char *str, t_all *all)
 	return (newstr);
 }
 
-int				check_dollar(t_all *all, char **word, int start, int *arr)
+static	int		check_dollar(t_all *all, char **word, int start, int *arr)
 {
 	int		len;
 	char	*tmp;
@@ -92,7 +92,7 @@ int				check_dollar(t_all *all, char **word, int start, int *arr)
 	return (ft_strlen((*word)));
 }
 
-void			search_dollar(char **word, char *str, int **start, int *i)
+static	void	search_dollar(char **word, char *str, int **start, int *i)
 {
 	int		num;
 	int		check;
